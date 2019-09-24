@@ -1,0 +1,15 @@
+# ninja log v5
+4	133	0	CMakeFiles/logger4h-lib.dir/src/main/cpp/FlushBuffer.cpp.o	d7ad80acff893f71
+0	369	0	CMakeFiles/logger4h-lib.dir/src/main/cpp/LogBufferHeader.cpp.o	c44dd355f6fe04d5
+6	730	0	CMakeFiles/logger4h-lib.dir/src/main/cpp/LogBuffer.cpp.o	4baa95dc12dc9d79
+1	886	0	CMakeFiles/logger4h-lib.dir/src/main/cpp/Logger4h-lib.cpp.o	8a2163b78eaafb6f
+2	979	0	CMakeFiles/logger4h-lib.dir/src/main/cpp/AsyncFileFlush.cpp.o	acc4b705d575569f
+979	1080	0	/Users/hejing/develop/GitHub/logger4h/jniLibs/armeabi-v7a/liblogger4h-lib.so	6f8171cef0c2200
+1	474	0	CMakeFiles/logger4h-lib.dir/src/main/cpp/Logger4h-lib.cpp.o	8a2163b78eaafb6f
+474	540	0	/Users/hejing/develop/GitHub/logger4h/jniLibs/armeabi-v7a/liblogger4h-lib.so	6f8171cef0c2200
+6	102	0	CMakeFiles/logger4h-lib.dir/src/main/cpp/FlushBuffer.cpp.o	d7ad80acff893f71
+1	270	0	CMakeFiles/logger4h-lib.dir/src/main/cpp/LogBufferHeader.cpp.o	c44dd355f6fe04d5
+8	620	0	CMakeFiles/logger4h-lib.dir/src/main/cpp/LogBuffer.cpp.o	4baa95dc12dc9d79
+3	795	0	CMakeFiles/logger4h-lib.dir/src/main/cpp/Logger4h-lib.cpp.o	8a2163b78eaafb6f
+5	989	0	CMakeFiles/logger4h-lib.dir/src/main/cpp/AsyncFileFlush.cpp.o	acc4b705d575569f
+989	1083	0	/Users/hejing/develop/GitHub/logger4h/jniLibs/armeabi-v7a/liblogger4h-lib.so	6f8171cef0c2200

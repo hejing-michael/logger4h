@@ -1,0 +1,3 @@
+/Users/hejing/develop/GitHub/logger4h/logger4a/.cxx/cmake/debug/x86_64/CMakeFiles/edit_cache.dir
+/Users/hejing/develop/GitHub/logger4h/logger4a/.cxx/cmake/debug/x86_64/CMakeFiles/rebuild_cache.dir
+/Users/hejing/develop/GitHub/logger4h/logger4a/.cxx/cmake/debug/x86_64/CMakeFiles/logger4h-lib.dir
