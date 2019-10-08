@@ -25,7 +25,7 @@ public class LoggerInit {
         String logPath = log.getAbsolutePath();
 
         FileOutTimeUtils.makeDirs(logPath);
-        mAndroidLoggerFactory=new AndroidLoggerFactory.Builder()
+        mAndroidLoggerFactory = new AndroidLoggerFactory.Builder()
                 .setMaxSaveDay(1)
                 .setBufferSize(1024 * 2)
                 .setBufferDirPath(logPath)
@@ -40,7 +40,7 @@ public class LoggerInit {
 
 
     public static void release() {
-        if (mAndroidLoggerFactory!=null){
+        if (mAndroidLoggerFactory != null) {
             mAndroidLoggerFactory.release();
         }
     }
