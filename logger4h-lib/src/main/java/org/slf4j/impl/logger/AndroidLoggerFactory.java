@@ -29,8 +29,6 @@ package org.slf4j.impl.logger;
 import android.util.Log;
 
 import org.slf4j.ILoggerFactory;
-import org.slf4j.Logger;
-import org.slf4j.helpers.MarkerIgnoringBase;
 import org.slf4j.impl.appender.AndroidAppender;
 import org.slf4j.impl.appender.FileAppender;
 import org.slf4j.impl.formatter.DateFileFormatter;
@@ -60,7 +58,7 @@ public class AndroidLoggerFactory implements ILoggerFactory {
      * tag names cannot be longer on Android platform
      */
     private static final int TAG_MAX_LENGTH = 23;
-    private final Map<String, Logger> loggerMap = new HashMap<>();
+    private final Map<String, AndroidLogger> loggerMap = new HashMap<>();
     private final Builder mBuilder;
 
     private AndroidLoggerFactory(Builder builder) {
@@ -75,7 +73,7 @@ public class AndroidLoggerFactory implements ILoggerFactory {
         // fix for bug #173
         final String actualName = forceValidName(name);
 
-        org.slf4j.Logger slogger;
+        AndroidLogger slogger;
         // protect against concurrent access of the loggerMap
         synchronized (this) {
             slogger = loggerMap.get(actualName);
@@ -92,12 +90,12 @@ public class AndroidLoggerFactory implements ILoggerFactory {
         return slogger;
     }
 
-    private List<MarkerIgnoringBase> getLoggerList(String actualName) {
+    private List<LoggerImpl> getLoggerList(String actualName) {
         String localPath = mBuilder.logDirPath + File.separator + actualName + File.separator + actualName + "_" + mBuilder.mLastDataFormatTime + mBuilder.suffix;
         String bufferPath = mBuilder.bufferDirPath + File.separator + actualName + File.separator + actualName + ".logCache";
         FileOutTimeUtils.makeDirs(mBuilder.logDirPath + File.separator + actualName);
         FileOutTimeUtils.makeDirs(mBuilder.bufferDirPath + File.separator + actualName);
-        List<MarkerIgnoringBase> loggerList = new ArrayList<>();
+        List<LoggerImpl> loggerList = new ArrayList<>();
         loggerList.add(new LoggerImpl(
                 actualName,
                 new AndroidAppender.Builder()
@@ -153,6 +151,14 @@ public class AndroidLoggerFactory implements ILoggerFactory {
             }
         }
         return name;
+    }
+
+    public void release() {
+        for (Map.Entry<String, AndroidLogger> entry : loggerMap.entrySet()) {
+            AndroidLogger androidLogger = entry.getValue();
+            androidLogger.flush();
+            androidLogger.release();
+        }
     }
 
     public static class Builder {

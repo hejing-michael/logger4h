@@ -26,8 +26,10 @@
  */
 package org.slf4j.impl.logger;
 
+import org.slf4j.event.Level;
 import org.slf4j.helpers.MarkerIgnoringBase;
 import org.slf4j.helpers.MessageFormatter;
+import org.slf4j.impl.appender.Appender;
 
 import java.util.List;
 
@@ -35,15 +37,15 @@ import java.util.List;
 /**
  * @author hejing
  */
-public class AndroidLogger extends MarkerIgnoringBase {
+public class AndroidLogger extends MarkerIgnoringBase implements Appender {
     private static final long serialVersionUID = -1227274521521287937L;
-    private List<MarkerIgnoringBase> loggerList;
+    private List<LoggerImpl> loggerList;
 
     /**
      * Package access allows only {@link AndroidLoggerFactory} to instantiate
      * SimpleLogger instances.
      */
-    public AndroidLogger(final String name, List<MarkerIgnoringBase> loggerList) {
+    public AndroidLogger(final String name, List<LoggerImpl> loggerList) {
         this.name = name;
         this.loggerList = loggerList;
     }
@@ -380,5 +382,26 @@ public class AndroidLogger extends MarkerIgnoringBase {
      */
     private String format(final String format, final Object[] args) {
         return MessageFormatter.arrayFormat(format, args).getMessage();
+    }
+
+    @Override
+    public void append(Level logLevel, String tag, String msg) {
+        for (Appender appender : loggerList) {
+            appender.append(logLevel, tag, msg);
+        }
+    }
+
+    @Override
+    public void flush() {
+        for (Appender appender : loggerList) {
+            appender.flush();
+        }
+    }
+
+    @Override
+    public void release() {
+        for (Appender appender : loggerList) {
+            appender.release();
+        }
     }
 }

@@ -11,7 +11,7 @@ import org.slf4j.impl.appender.Appender;
 /**
  * @author hejing
  */
-public class LoggerImpl extends MarkerIgnoringBase {
+public class LoggerImpl extends MarkerIgnoringBase implements Appender {
     private static final long serialVersionUID = -1227274521521287937L;
     private Appender mAppender;
 
@@ -281,5 +281,26 @@ public class LoggerImpl extends MarkerIgnoringBase {
      */
     private String format(final String format, final Object[] args) {
         return MessageFormatter.arrayFormat(format, args).getMessage();
+    }
+
+    @Override
+    public void append(Level logLevel, String tag, String msg) {
+        if (mAppender != null) {
+            mAppender.append(logLevel, tag, msg);
+        }
+    }
+
+    @Override
+    public void flush() {
+        if (mAppender != null) {
+            mAppender.flush();
+        }
+    }
+
+    @Override
+    public void release() {
+        if (mAppender != null) {
+            mAppender.release();
+        }
     }
 }
