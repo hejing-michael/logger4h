@@ -1,32 +1,25 @@
 package org.slf4j.impl;
 
 import org.slf4j.impl.logger.AndroidLoggerFactory;
-import org.slf4j.impl.utils.FileUtils;
+import org.slf4j.impl.utils.FileOutTimeUtils;
 
 import java.io.File;
 
-/**
- * @author pqpo
- * @date 2017/11/24
- */
 public class LoggerInit {
 
     public static void init(File log) {
-        String bufferPath = log.getAbsolutePath();
         String logPath = log.getAbsolutePath();
 
-        FileUtils.makeDirs(bufferPath);
-        FileUtils.makeDirs(logPath);
-        AndroidLoggerFactory factory = new AndroidLoggerFactory.Builder()
+        FileOutTimeUtils.makeDirs(logPath);
+        StaticLoggerBinder.getSingleton().setLoggerFactory(new AndroidLoggerFactory.Builder()
                 .setMaxSaveDay(1)
                 .setBufferSize(1024 * 2)
-                .setBufferDirPath(bufferPath)
+                .setBufferDirPath(logPath)
                 .setLogDirPath(logPath)
-                .setPattern("yyyy-MM-dd HH:mm")
-                .setSuffix("log")
-                .create();
-        factory.clearAllOutOfDateFiles();
-        StaticLoggerBinder.getSingleton().setLoggerFactory(factory);
+                .setPattern("yyyy-MM-dd_HH")
+                .setSuffix(".log")
+                .setCompress(false)
+                .clearAllOutOfDateFiles()
+                .create());
     }
-
 }

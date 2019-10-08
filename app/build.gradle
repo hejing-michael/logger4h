@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "log4a"
+        applicationId "com.slf4j.logger"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 2

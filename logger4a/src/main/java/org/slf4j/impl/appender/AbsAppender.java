@@ -50,13 +50,14 @@ public abstract class AbsAppender implements Appender {
     @Override
     public void append(Level logLevel, String tag, String msg) {
         LogData logData = mLogData.obtain(logLevel, tag, msg);
-        boolean intercepted = false;
+        boolean print = true;
         for (Interceptor interceptor : interceptors) {
-            if (!interceptor.intercept(logData)) {
-                intercepted = true;
+            print = interceptor.intercept(logData) && print;
+            if (!print) {
+                break;
             }
         }
-        if (!intercepted) {
+        if (print) {
             appendInner(logData.logLevel, logData.tag, logData.msg);
         }
         logData.recycle();

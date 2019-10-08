@@ -2,8 +2,10 @@ package org.slf4j.impl.appender;
 
 import android.util.Log;
 
+import org.slf4j.event.EventConstants;
 import org.slf4j.event.Level;
 import org.slf4j.impl.interceptor.Interceptor;
+import org.slf4j.impl.interceptor.LogData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +23,23 @@ public class AndroidAppender extends AbsAppender {
 
     @Override
     protected void doAppend(Level logLevel, String tag, String msg) {
-        Log.println(getLogLevel(logLevel), tag, msg);
-    }
-
-    private int getLogLevel(Level logLevel) {
-        return logLevel.toInt() / 10 + (Level.ERROR.toInt() / 10 - Log.ERROR);
+        switch (logLevel.toInt()) {
+            case EventConstants.DEBUG_INT:
+                Log.d(tag, msg);
+                break;
+            case EventConstants.INFO_INT:
+                Log.i(tag, msg);
+                break;
+            case EventConstants.WARN_INT:
+                Log.w(tag, msg);
+                break;
+            case EventConstants.ERROR_INT:
+                Log.e(tag, msg);
+                break;
+            default:
+                Log.v(tag, msg);
+                break;
+        }
     }
 
     public static class Builder {

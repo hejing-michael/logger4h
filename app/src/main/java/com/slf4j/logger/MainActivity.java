@@ -63,10 +63,10 @@ public class MainActivity extends Activity {
         btnWrite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                String content = etContent.getText().toString();
                 for (int i = 0; i < 1000; i++) {
                     String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS", Locale.getDefault()).format(new Date());
-                    log("log-->" + time + "-->" + i);
+                    log("log-->" + time + "-->" + i + " :" + content);
                 }
             }
         });

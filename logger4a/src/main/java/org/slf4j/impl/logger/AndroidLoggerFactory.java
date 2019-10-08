@@ -34,7 +34,7 @@ import org.slf4j.helpers.MarkerIgnoringBase;
 import org.slf4j.impl.appender.AndroidAppender;
 import org.slf4j.impl.appender.FileAppender;
 import org.slf4j.impl.formatter.DateFileFormatter;
-import org.slf4j.impl.utils.FileUtils;
+import org.slf4j.impl.utils.FileOutTimeUtils;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -60,22 +60,10 @@ public class AndroidLoggerFactory implements ILoggerFactory {
      */
     private static final int TAG_MAX_LENGTH = 23;
     private final Map<String, Logger> loggerMap = new HashMap<>();
-    private final String bufferDirPath;
-    private final String logDirPath;
-    private final String mLastDataFormatTime;
-    private final int bufferSize;
-    private final int maxSaveDay;
-    private final String pattern;
-    private final String suffix;
+    private final Builder mBuilder;
 
     private AndroidLoggerFactory(Builder builder) {
-        this.maxSaveDay = builder.maxSaveDay;
-        this.bufferSize = builder.bufferSize;
-        this.bufferDirPath = builder.bufferDirPath;
-        this.logDirPath = builder.logDirPath;
-        this.pattern = builder.pattern;
-        this.suffix = builder.suffix;
-        this.mLastDataFormatTime = builder.mLastDataFormatTime;
+        this.mBuilder = builder;
     }
 
     /**
@@ -104,10 +92,10 @@ public class AndroidLoggerFactory implements ILoggerFactory {
     }
 
     private List<MarkerIgnoringBase> getLoggerList(String actualName) {
-        String localPath = logDirPath + File.separator + actualName + File.separator + mLastDataFormatTime + "." + suffix;
-        String bufferPath = bufferDirPath + File.separator + actualName + File.separator + actualName + ".logCache";
-        FileUtils.makeDirs(logDirPath + File.separator + actualName);
-        FileUtils.makeDirs(bufferDirPath + File.separator + actualName);
+        String localPath = mBuilder.logDirPath + File.separator + actualName + File.separator + actualName + "_" + mBuilder.mLastDataFormatTime + mBuilder.suffix;
+        String bufferPath = mBuilder.bufferDirPath + File.separator + actualName + File.separator + actualName + ".logCache";
+        FileOutTimeUtils.makeDirs(mBuilder.logDirPath + File.separator + actualName);
+        FileOutTimeUtils.makeDirs(mBuilder.bufferDirPath + File.separator + actualName);
         List<MarkerIgnoringBase> loggerList = new ArrayList<>();
         loggerList.add(new LoggerImpl(
                 actualName,
@@ -118,8 +106,8 @@ public class AndroidLoggerFactory implements ILoggerFactory {
                 actualName,
                 new FileAppender.Builder(bufferPath)
                         .setLogFilePath(localPath)
-                        .setBufferSize(bufferSize)
-                        .setCompress(false)
+                        .setBufferSize(mBuilder.bufferSize)
+                        .setCompress(mBuilder.compress)
                         .setFormatter(new DateFileFormatter())
                         .create()
         ));
@@ -129,7 +117,7 @@ public class AndroidLoggerFactory implements ILoggerFactory {
     /**
      * Trim name in case it exceeds maximum length of {@value #TAG_MAX_LENGTH} characters.
      */
-    private final String forceValidName(String name) {
+    private String forceValidName(String name) {
         if (name != null && name.length() > TAG_MAX_LENGTH) {
             final StringTokenizer st = new StringTokenizer(name, ".");
             // note that empty tokens are skipped, i.e., "aa..bb" has tokens "aa", "bb"
@@ -138,12 +126,12 @@ public class AndroidLoggerFactory implements ILoggerFactory {
                 String token;
                 do {
                     token = st.nextToken();
-                    if (token.length() == 1) // token of one character appended as is
-                    {
+                    // token of one character appended as is
+                    if (token.length() == 1) {
                         sb.append(token);
                         sb.append('.');
-                    } else if (st.hasMoreTokens()) // truncate all but the last token
-                    {
+                        // truncate all but the last token
+                    } else if (st.hasMoreTokens()) {
                         sb.append(token.charAt(0));
                         sb.append("*.");
                     } else // last token (usually class name) appended as is
@@ -164,10 +152,6 @@ public class AndroidLoggerFactory implements ILoggerFactory {
         return name;
     }
 
-    public void clearAllOutOfDateFiles() {
-        FileUtils.deleteAllOutOfDateFiles(TAG, logDirPath, pattern, System.currentTimeMillis(), maxSaveDay, suffix);
-    }
-
     public static class Builder {
         private String bufferDirPath;
         private String logDirPath;
@@ -176,6 +160,7 @@ public class AndroidLoggerFactory implements ILoggerFactory {
         private int maxSaveDay;
         private String pattern;
         private String suffix;
+        private boolean compress;
 
         public Builder setBufferDirPath(String bufferDirPath) {
             this.bufferDirPath = bufferDirPath;
@@ -207,6 +192,17 @@ public class AndroidLoggerFactory implements ILoggerFactory {
             this.suffix = suffix;
             return this;
         }
+
+        public Builder setCompress(boolean compress) {
+            this.compress = compress;
+            return this;
+        }
+
+        public Builder clearAllOutOfDateFiles() {
+            FileOutTimeUtils.deleteAllOutOfDateAndNonDesignatedFiles(TAG, logDirPath, pattern, System.currentTimeMillis(), maxSaveDay, suffix);
+            return this;
+        }
+
 
         public AndroidLoggerFactory create() {
             if (logDirPath == null) {
