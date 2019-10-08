@@ -1,3 +1,0 @@
-/Users/hejing/develop/GitHub/logger4h/logger4a/.cxx/cmake/release/arm64-v8a/CMakeFiles/edit_cache.dir
-/Users/hejing/develop/GitHub/logger4h/logger4a/.cxx/cmake/release/arm64-v8a/CMakeFiles/rebuild_cache.dir
-/Users/hejing/develop/GitHub/logger4h/logger4a/.cxx/cmake/release/arm64-v8a/CMakeFiles/logger4h-lib.dir
