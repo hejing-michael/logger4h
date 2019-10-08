@@ -102,6 +102,14 @@ public class FileAppender extends AbsAppender {
             return this;
         }
 
+        public Builder addInterceptor(List<Interceptor> interceptorList) {
+            if (interceptors == null) {
+                interceptors = new ArrayList<>();
+            }
+            interceptors.addAll(interceptorList);
+            return this;
+        }
+
         public Builder setFormatter(Formatter formatter) {
             this.formatter = formatter;
             return this;

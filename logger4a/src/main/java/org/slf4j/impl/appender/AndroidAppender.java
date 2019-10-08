@@ -5,9 +5,9 @@ import android.util.Log;
 import org.slf4j.event.EventConstants;
 import org.slf4j.event.Level;
 import org.slf4j.impl.interceptor.Interceptor;
-import org.slf4j.impl.interceptor.LogData;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -52,10 +52,15 @@ public class AndroidAppender extends AbsAppender {
         }
 
         public Builder addInterceptor(Interceptor interceptor) {
+            addInterceptor(Collections.singletonList(interceptor));
+            return this;
+        }
+
+        public Builder addInterceptor(List<Interceptor> interceptorList) {
             if (interceptors == null) {
                 interceptors = new ArrayList<>();
             }
-            interceptors.add(interceptor);
+            interceptors.addAll(interceptorList);
             return this;
         }
 

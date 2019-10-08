@@ -34,6 +34,7 @@ import org.slf4j.helpers.MarkerIgnoringBase;
 import org.slf4j.impl.appender.AndroidAppender;
 import org.slf4j.impl.appender.FileAppender;
 import org.slf4j.impl.formatter.DateFileFormatter;
+import org.slf4j.impl.interceptor.Interceptor;
 import org.slf4j.impl.utils.FileOutTimeUtils;
 
 import java.io.File;
@@ -100,6 +101,7 @@ public class AndroidLoggerFactory implements ILoggerFactory {
         loggerList.add(new LoggerImpl(
                 actualName,
                 new AndroidAppender.Builder()
+                        .addInterceptor(mBuilder.interceptors)
                         .create()
         ));
         loggerList.add(new LoggerImpl(
@@ -109,6 +111,7 @@ public class AndroidLoggerFactory implements ILoggerFactory {
                         .setBufferSize(mBuilder.bufferSize)
                         .setCompress(mBuilder.compress)
                         .setFormatter(new DateFileFormatter())
+                        .addInterceptor(mBuilder.interceptors)
                         .create()
         ));
         return loggerList;
@@ -161,6 +164,14 @@ public class AndroidLoggerFactory implements ILoggerFactory {
         private String pattern;
         private String suffix;
         private boolean compress;
+        private List<Interceptor> interceptors = new ArrayList<>();
+
+        public Builder addInterceptor(List<Interceptor> interceptors) {
+            if (interceptors != null && !interceptors.isEmpty()) {
+                this.interceptors.addAll(interceptors);
+            }
+            return this;
+        }
 
         public Builder setBufferDirPath(String bufferDirPath) {
             this.bufferDirPath = bufferDirPath;
