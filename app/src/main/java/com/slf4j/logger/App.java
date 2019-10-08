@@ -13,6 +13,6 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        LoggerInit.init(FileOutTimeUtils.getLogDir(this));
+        LoggerInit.init(this, FileOutTimeUtils.getLogDir());
     }
 }

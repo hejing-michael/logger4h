@@ -1,9 +1,5 @@
 package org.slf4j.impl.utils;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -18,15 +14,7 @@ import java.util.Locale;
 public class FileOutTimeUtils {
     private static final String ROOT_PATH = Environment.getExternalStorageDirectory().getPath();
 
-    public static File getLogDir(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (context.checkSelfPermission(Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED
-                    || context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-            ) {
-                throw new RuntimeException("Currently need read and write permissions, please grant read and write permissions.");
-            }
-        }
-
+    public static File getLogDir() {
         File root = new File(ROOT_PATH, "logger4h");
         Log.v("Files", "log mkdirs success:" + makeDirs(root.getPath()));
         File log = new File(root.getPath(), "logs");
