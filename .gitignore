@@ -3,3 +3,5 @@
 /jniLibs/
 /.idea/
 /.gradle/
+/.settings/
+/.project

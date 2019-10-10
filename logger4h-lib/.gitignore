@@ -2,3 +2,5 @@
 /.cxx
 /.externalNativeBuild
 /*.iml
+/.classpath
+/.project

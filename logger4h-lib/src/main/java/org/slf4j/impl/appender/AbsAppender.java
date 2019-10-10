@@ -52,8 +52,8 @@ public abstract class AbsAppender implements Appender {
         LogData logData = mLogData.obtain(logLevel, tag, msg);
         boolean print = true;
         for (Interceptor interceptor : interceptors) {
-            print = interceptor.intercept(logData) && print;
-            if (!print) {
+            if (interceptor.intercept(logData)) {
+                print = false;
                 break;
             }
         }

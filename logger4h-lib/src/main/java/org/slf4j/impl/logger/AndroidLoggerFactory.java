@@ -26,6 +26,7 @@
  */
 package org.slf4j.impl.logger;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.slf4j.ILoggerFactory;
@@ -91,10 +92,6 @@ public class AndroidLoggerFactory implements ILoggerFactory {
     }
 
     private List<LoggerImpl> getLoggerList(String actualName) {
-        String localPath = mBuilder.logDirPath + File.separator + actualName + File.separator + actualName + "_" + mBuilder.mLastDataFormatTime + mBuilder.suffix;
-        String bufferPath = mBuilder.bufferDirPath + File.separator + actualName + File.separator + actualName + ".logCache";
-        FileOutTimeUtils.makeDirs(mBuilder.logDirPath + File.separator + actualName);
-        FileOutTimeUtils.makeDirs(mBuilder.bufferDirPath + File.separator + actualName);
         List<LoggerImpl> loggerList = new ArrayList<>();
         loggerList.add(new LoggerImpl(
                 actualName,
@@ -102,16 +99,23 @@ public class AndroidLoggerFactory implements ILoggerFactory {
                         .addInterceptor(mBuilder.interceptors)
                         .create()
         ));
-        loggerList.add(new LoggerImpl(
-                actualName,
-                new FileAppender.Builder(bufferPath)
-                        .setLogFilePath(localPath)
-                        .setBufferSize(mBuilder.bufferSize)
-                        .setCompress(mBuilder.compress)
-                        .setFormatter(new DateFileFormatter())
-                        .addInterceptor(mBuilder.interceptors)
-                        .create()
-        ));
+
+        if (!TextUtils.isEmpty(actualName) && actualName.contains(mBuilder.baseTag)) {
+            String localPath = mBuilder.logDirPath + File.separator + actualName + File.separator + actualName + "_" + mBuilder.mLastDataFormatTime + mBuilder.suffix;
+            String bufferPath = mBuilder.bufferDirPath + File.separator + actualName + File.separator + actualName + ".logCache";
+            FileOutTimeUtils.makeDirs(mBuilder.logDirPath + File.separator + actualName);
+            FileOutTimeUtils.makeDirs(mBuilder.bufferDirPath + File.separator + actualName);
+            loggerList.add(new LoggerImpl(
+                    actualName,
+                    new FileAppender.Builder(bufferPath)
+                            .setLogFilePath(localPath)
+                            .setBufferSize(mBuilder.bufferSize)
+                            .setCompress(mBuilder.compress)
+                            .setFormatter(new DateFileFormatter())
+                            .addInterceptor(mBuilder.interceptors)
+                            .create()
+            ));
+        }
         return loggerList;
     }
 
@@ -170,12 +174,25 @@ public class AndroidLoggerFactory implements ILoggerFactory {
         private String pattern;
         private String suffix;
         private boolean compress;
+        private String baseTag;
         private List<Interceptor> interceptors = new ArrayList<>();
 
         public Builder addInterceptor(List<Interceptor> interceptors) {
             if (interceptors != null && !interceptors.isEmpty()) {
                 this.interceptors.addAll(interceptors);
             }
+            return this;
+        }
+
+        public Builder addInterceptor(Interceptor interceptors) {
+            if (interceptors != null) {
+                this.interceptors.add(interceptors);
+            }
+            return this;
+        }
+
+        public Builder setBaseTag(String baseTag) {
+            this.baseTag = baseTag;
             return this;
         }
 

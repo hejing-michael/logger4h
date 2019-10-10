@@ -15,6 +15,6 @@ public class LevelInterceptor implements Interceptor {
 
     @Override
     public boolean intercept(LogData logData) {
-        return logData != null && logData.logLevel.toInt() >= level.toInt();
+        return logData != null && logData.logLevel.toInt() < level.toInt();
     }
 }
