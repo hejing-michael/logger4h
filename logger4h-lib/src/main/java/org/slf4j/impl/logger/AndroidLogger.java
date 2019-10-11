@@ -439,9 +439,9 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
         }
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
         String fileName = LogHeaderMessageUtil.getFileName(stackTrace, currentStack);
-        return (TextUtils.isEmpty(fileName) ? fileName : fileName.replaceAll(".java", ""))
+        return "[" + (TextUtils.isEmpty(fileName) ? fileName : fileName.replaceAll(".java", ""))
                 + " line：" + LogHeaderMessageUtil.getLineNumber(stackTrace, currentStack)
                 + " thread：" + Thread.currentThread().getId()
-                + " " + msg;
+                + "] " + msg;
     }
 }
