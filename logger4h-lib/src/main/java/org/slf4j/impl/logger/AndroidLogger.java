@@ -26,6 +26,8 @@
  */
 package org.slf4j.impl.logger;
 
+import android.text.TextUtils;
+
 import org.slf4j.event.Level;
 import org.slf4j.helpers.MarkerIgnoringBase;
 import org.slf4j.helpers.MessageFormatter;
@@ -436,8 +438,10 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
             return msg;
         }
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-        return LogHeaderMessageUtil.getFileName(stackTrace, currentStack)
-                + " " + LogHeaderMessageUtil.getLineNumber(stackTrace, currentStack)
+        String fileName = LogHeaderMessageUtil.getFileName(stackTrace, currentStack);
+        return (TextUtils.isEmpty(fileName) ? fileName : fileName.replaceAll(".java", ""))
+                + " line：" + LogHeaderMessageUtil.getLineNumber(stackTrace, currentStack)
+                + " thread：" + Thread.currentThread().getId()
                 + " " + msg;
     }
 }
