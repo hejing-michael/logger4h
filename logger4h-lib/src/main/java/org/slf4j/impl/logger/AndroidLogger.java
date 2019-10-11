@@ -40,14 +40,19 @@ import java.util.List;
 public class AndroidLogger extends MarkerIgnoringBase implements Appender {
     private static final long serialVersionUID = -1227274521521287937L;
     private List<LoggerImpl> loggerList;
+    private boolean showStackTrace;
+    private int currentStack;
 
     /**
      * Package access allows only {@link AndroidLoggerFactory} to instantiate
      * SimpleLogger instances.
      */
-    public AndroidLogger(final String name, List<LoggerImpl> loggerList) {
+    AndroidLogger(final String name, List<LoggerImpl> loggerList,
+                  boolean showStackTrace, int currentStack) {
         this.name = name;
         this.loggerList = loggerList;
+        this.showStackTrace = showStackTrace;
+        this.currentStack = currentStack;
     }
 
     /**
@@ -68,18 +73,21 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
      */
     @Override
     public void trace(final String msg) {
+        String message = getStackMessage(showStackTrace, msg);
         for (MarkerIgnoringBase logger : loggerList) {
-            logger.trace(msg);
+            logger.trace(message);
         }
     }
+
 
     /**
      * @see org.slf4j.Logger#trace(java.lang.String, java.lang.Object)
      */
     @Override
     public void trace(final String format, final Object param1) {
+        String message = getStackMessage(showStackTrace, format(format, param1, null));
         for (MarkerIgnoringBase logger : loggerList) {
-            logger.trace(format(format, param1, null));
+            logger.trace(message);
         }
     }
 
@@ -88,8 +96,9 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
      */
     @Override
     public void trace(final String format, final Object param1, final Object param2) {
+        String message = getStackMessage(showStackTrace, format(format, param1, param2));
         for (MarkerIgnoringBase logger : loggerList) {
-            logger.trace(format(format, param1, param2));
+            logger.trace(message);
         }
     }
 
@@ -98,8 +107,9 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
      */
     @Override
     public void trace(final String format, final Object[] argArray) {
+        String message = getStackMessage(showStackTrace, format(format, argArray));
         for (MarkerIgnoringBase logger : loggerList) {
-            logger.trace(format(format, argArray));
+            logger.trace(message);
         }
     }
 
@@ -108,8 +118,9 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
      */
     @Override
     public void trace(final String msg, final Throwable t) {
+        String message = getStackMessage(showStackTrace, msg);
         for (MarkerIgnoringBase logger : loggerList) {
-            logger.trace(msg, t);
+            logger.trace(message, t);
         }
     }
 
@@ -131,8 +142,9 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
      */
     @Override
     public void debug(final String msg) {
+        String message = getStackMessage(showStackTrace, msg);
         for (MarkerIgnoringBase logger : loggerList) {
-            logger.debug(msg);
+            logger.debug(message);
         }
     }
 
@@ -141,8 +153,9 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
      */
     @Override
     public void debug(final String format, final Object arg1) {
+        String message = getStackMessage(showStackTrace, format(format, arg1, null));
         for (MarkerIgnoringBase logger : loggerList) {
-            logger.debug(format(format, arg1, null));
+            logger.debug(message);
         }
     }
 
@@ -151,8 +164,9 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
      */
     @Override
     public void debug(final String format, final Object param1, final Object param2) {
+        String message = getStackMessage(showStackTrace, format(format, param1, param2));
         for (MarkerIgnoringBase logger : loggerList) {
-            logger.debug(format(format, param1, param2));
+            logger.debug(message);
         }
     }
 
@@ -161,8 +175,9 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
      */
     @Override
     public void debug(final String format, final Object[] argArray) {
+        String message = getStackMessage(showStackTrace, format(format, argArray));
         for (MarkerIgnoringBase logger : loggerList) {
-            logger.debug(format(format, argArray));
+            logger.debug(message);
         }
     }
 
@@ -171,8 +186,9 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
      */
     @Override
     public void debug(final String msg, final Throwable t) {
+        String message = getStackMessage(showStackTrace, msg);
         for (MarkerIgnoringBase logger : loggerList) {
-            logger.debug(msg, t);
+            logger.debug(message, t);
         }
     }
 
@@ -194,8 +210,9 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
      */
     @Override
     public void info(final String msg) {
+        String message = getStackMessage(showStackTrace, msg);
         for (MarkerIgnoringBase logger : loggerList) {
-            logger.info(msg);
+            logger.info(message);
         }
     }
 
@@ -204,8 +221,9 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
      */
     @Override
     public void info(final String format, final Object arg) {
+        String message = getStackMessage(showStackTrace, format(format, arg, null));
         for (MarkerIgnoringBase logger : loggerList) {
-            logger.info(format(format, arg, null));
+            logger.info(message);
         }
     }
 
@@ -214,8 +232,9 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
      */
     @Override
     public void info(final String format, final Object arg1, final Object arg2) {
+        String message = getStackMessage(showStackTrace, format(format, arg1, arg2));
         for (MarkerIgnoringBase logger : loggerList) {
-            logger.info(format(format, arg1, arg2));
+            logger.info(message);
         }
     }
 
@@ -224,8 +243,9 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
      */
     @Override
     public void info(final String format, final Object[] argArray) {
+        String message = getStackMessage(showStackTrace, format(format, argArray));
         for (MarkerIgnoringBase logger : loggerList) {
-            logger.info(format(format, argArray));
+            logger.info(message);
         }
     }
 
@@ -234,8 +254,9 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
      */
     @Override
     public void info(final String msg, final Throwable t) {
+        String message = getStackMessage(showStackTrace, msg);
         for (MarkerIgnoringBase logger : loggerList) {
-            logger.info(msg, t);
+            logger.info(message, t);
         }
     }
 
@@ -257,8 +278,9 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
      */
     @Override
     public void warn(final String msg) {
+        String message = getStackMessage(showStackTrace, msg);
         for (MarkerIgnoringBase logger : loggerList) {
-            logger.warn(msg);
+            logger.warn(message);
         }
     }
 
@@ -267,8 +289,9 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
      */
     @Override
     public void warn(final String format, final Object arg) {
+        String message = getStackMessage(showStackTrace, format(format, arg, null));
         for (MarkerIgnoringBase logger : loggerList) {
-            logger.warn(format(format, arg, null));
+            logger.warn(message);
         }
     }
 
@@ -277,8 +300,9 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
      */
     @Override
     public void warn(final String format, final Object arg1, final Object arg2) {
+        String message = getStackMessage(showStackTrace, format(format, arg1, arg2));
         for (MarkerIgnoringBase logger : loggerList) {
-            logger.warn(format(format, arg1, arg2));
+            logger.warn(message);
         }
     }
 
@@ -287,8 +311,9 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
      */
     @Override
     public void warn(final String format, final Object[] argArray) {
+        String message = getStackMessage(showStackTrace, format(format, argArray));
         for (MarkerIgnoringBase logger : loggerList) {
-            logger.warn(format(format, argArray));
+            logger.warn(message);
         }
     }
 
@@ -297,8 +322,9 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
      */
     @Override
     public void warn(final String msg, final Throwable t) {
+        String message = getStackMessage(showStackTrace, msg);
         for (MarkerIgnoringBase logger : loggerList) {
-            logger.warn(msg, t);
+            logger.warn(message, t);
         }
     }
 
@@ -318,8 +344,9 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
      */
     @Override
     public void error(final String msg) {
+        String message = getStackMessage(showStackTrace, msg);
         for (MarkerIgnoringBase logger : loggerList) {
-            logger.error(msg);
+            logger.error(message);
         }
     }
 
@@ -328,8 +355,9 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
      */
     @Override
     public void error(final String format, final Object arg) {
+        String message = getStackMessage(showStackTrace, format(format, arg, null));
         for (MarkerIgnoringBase logger : loggerList) {
-            logger.error(format(format, arg, null));
+            logger.error(message);
         }
     }
 
@@ -338,8 +366,9 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
      */
     @Override
     public void error(final String format, final Object arg1, final Object arg2) {
+        String message = getStackMessage(showStackTrace, format(format, arg1, arg2));
         for (MarkerIgnoringBase logger : loggerList) {
-            logger.error(format(format, arg1, arg2));
+            logger.error(message);
         }
     }
 
@@ -348,8 +377,9 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
      */
     @Override
     public void error(final String format, final Object[] argArray) {
+        String message = getStackMessage(showStackTrace, format(format, argArray));
         for (MarkerIgnoringBase logger : loggerList) {
-            logger.error(format(format, argArray));
+            logger.error(message);
         }
     }
 
@@ -358,17 +388,16 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
      */
     @Override
     public void error(final String msg, final Throwable t) {
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        String header = LogHeaderMessageUtil.getFileName(stackTrace, 3)
+                + " " + LogHeaderMessageUtil.getLineNumber(stackTrace, 3);
         for (MarkerIgnoringBase logger : loggerList) {
-            logger.error(msg, t);
+            logger.error(header + " " + msg, t);
         }
     }
 
     /**
      * For formatted messages substitute arguments.
-     *
-     * @param format
-     * @param arg1
-     * @param arg2
      */
     private String format(final String format, final Object arg1, final Object arg2) {
         return MessageFormatter.format(format, arg1, arg2).getMessage();
@@ -376,9 +405,6 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
 
     /**
      * For formatted messages substitute arguments.
-     *
-     * @param format
-     * @param args
      */
     private String format(final String format, final Object[] args) {
         return MessageFormatter.arrayFormat(format, args).getMessage();
@@ -403,5 +429,15 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
         for (Appender appender : loggerList) {
             appender.release();
         }
+    }
+
+    private String getStackMessage(boolean showStackTrace, String msg) {
+        if (!showStackTrace) {
+            return msg;
+        }
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        return LogHeaderMessageUtil.getFileName(stackTrace, currentStack)
+                + " " + LogHeaderMessageUtil.getLineNumber(stackTrace, currentStack)
+                + " " + msg;
     }
 }

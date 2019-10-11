@@ -84,7 +84,7 @@ public class AndroidLoggerFactory implements ILoggerFactory {
                             "LoggerImpl name '" + name + "' exceeds maximum length of " + TAG_MAX_LENGTH +
                                     " characters, using '" + actualName + "' instead.");
                 }
-                slogger = new AndroidLogger(actualName, getLoggerList(actualName));
+                slogger = new AndroidLogger(actualName, getLoggerList(actualName), mBuilder.showStackTrace, mBuilder.currentStack);
                 loggerMap.put(actualName, slogger);
             }
         }
@@ -174,7 +174,9 @@ public class AndroidLoggerFactory implements ILoggerFactory {
         private String pattern;
         private String suffix;
         private boolean compress;
-        private String baseTag;
+        private String baseTag = "";
+        private boolean showStackTrace = true;
+        private int currentStack = 4;
         private List<Interceptor> interceptors = new ArrayList<>();
 
         public Builder addInterceptor(List<Interceptor> interceptors) {
@@ -188,6 +190,16 @@ public class AndroidLoggerFactory implements ILoggerFactory {
             if (interceptors != null) {
                 this.interceptors.add(interceptors);
             }
+            return this;
+        }
+
+        public Builder setCurrentStack(int currentStack) {
+            this.currentStack = currentStack;
+            return this;
+        }
+
+        public Builder setShowStackTrace(boolean showStackTrace) {
+            this.showStackTrace = showStackTrace;
             return this;
         }
 
