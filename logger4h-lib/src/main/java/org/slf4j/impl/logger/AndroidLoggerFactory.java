@@ -33,6 +33,7 @@ import org.slf4j.ILoggerFactory;
 import org.slf4j.impl.appender.AndroidAppender;
 import org.slf4j.impl.appender.FileAppender;
 import org.slf4j.impl.formatter.DateFileFormatter;
+import org.slf4j.impl.formatter.Formatter;
 import org.slf4j.impl.interceptor.Interceptor;
 import org.slf4j.impl.utils.FileOutTimeUtils;
 
@@ -111,7 +112,7 @@ public class AndroidLoggerFactory implements ILoggerFactory {
                             .setLogFilePath(localPath)
                             .setBufferSize(mBuilder.bufferSize)
                             .setCompress(mBuilder.compress)
-                            .setFormatter(new DateFileFormatter())
+                            .setFormatter(mBuilder.formatter != null ? mBuilder.formatter : new DateFileFormatter())
                             .addInterceptor(mBuilder.interceptors)
                             .create()
             ));
@@ -177,7 +178,13 @@ public class AndroidLoggerFactory implements ILoggerFactory {
         private String baseTag = "";
         private boolean showStackTrace = true;
         private int currentStack = 4;
+        private Formatter formatter;
         private List<Interceptor> interceptors = new ArrayList<>();
+
+        public Builder setFormatter(Formatter formatter) {
+            this.formatter = formatter;
+            return this;
+        }
 
         public Builder addInterceptor(List<Interceptor> interceptors) {
             if (interceptors != null && !interceptors.isEmpty()) {
