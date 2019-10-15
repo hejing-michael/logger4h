@@ -27,7 +27,7 @@ public class LoggerInit {
 
     public static void init(Context context, AndroidLoggerFactory androidLoggerFactory) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (context.checkSelfPermission(Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED
+            if (context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                     || context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
             ) {
                 throw new RuntimeException("Currently need read and write permissions, please grant read and write permissions.");
