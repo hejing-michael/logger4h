@@ -8,6 +8,9 @@ import android.os.Build;
 import org.slf4j.impl.logger.AndroidLoggerFactory;
 import org.slf4j.impl.utils.FileOutTimeUtils;
 
+/**
+ * @author hejin
+ */
 public class LoggerInit {
     private static AndroidLoggerFactory mAndroidLoggerFactory;
 
@@ -42,6 +45,7 @@ public class LoggerInit {
     public static void release() {
         if (mAndroidLoggerFactory != null) {
             mAndroidLoggerFactory.release();
+            mAndroidLoggerFactory = null;
         }
     }
 }
