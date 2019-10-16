@@ -11,7 +11,7 @@ import java.util.Locale;
  * @author hejing
  */
 public class DateFileFormatter implements Formatter {
-    private SimpleDateFormat simpleDateFormat = null;
+    private SimpleDateFormat simpleDateFormat;
     private Date mDate;
     private String lastDataFormated = null;
     private StringBuffer mStringBuffer;
@@ -36,9 +36,9 @@ public class DateFileFormatter implements Formatter {
             mDate.setTime(System.currentTimeMillis());
             lastDataFormated = simpleDateFormat.format(mDate);
             resetTimePrefix();
-            return formatString(logLevel, tag, msg);
+            return formatString(msg);
         }
-        return formatString(logLevel, tag, msg);
+        return formatString(msg);
     }
 
     private void resetTimePrefix() {
@@ -48,10 +48,10 @@ public class DateFileFormatter implements Formatter {
         mTimeLength = mStringBuffer.append(lastDataFormated).append(' ').length();
     }
 
-    private String formatString(Level logLevel, String tag, String msg) {
+    private String formatString(String msg) {
         if (mStringBuffer.length() > mTimeLength) {
             mStringBuffer.delete(mTimeLength, mStringBuffer.length());
         }
-        return mStringBuffer.append(logLevel.toString()).append(" ").append(tag).append(" ").append(msg).append('\n').toString();
+        return mStringBuffer.append(msg).append('\n').toString();
     }
 }
