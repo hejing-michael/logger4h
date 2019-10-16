@@ -26,7 +26,7 @@ public class DateFileFormatter implements Formatter {
         mStringBuffer = new StringBuffer();
         //重置秒数
         Calendar instance = Calendar.getInstance();
-        instance.set(Calendar.SECOND, 0);
+        instance.set(Calendar.MILLISECOND, 0);
         mDate = instance.getTime();
     }
 
@@ -36,9 +36,9 @@ public class DateFileFormatter implements Formatter {
             mDate.setTime(System.currentTimeMillis());
             lastDataFormated = simpleDateFormat.format(mDate);
             resetTimePrefix();
-            return formatString(msg);
+            return formatString(logLevel, tag, msg);
         }
-        return formatString(msg);
+        return formatString(logLevel, tag, msg);
     }
 
     private void resetTimePrefix() {
@@ -48,10 +48,10 @@ public class DateFileFormatter implements Formatter {
         mTimeLength = mStringBuffer.append(lastDataFormated).append(' ').length();
     }
 
-    private String formatString(String msg) {
+    public String formatString(Level logLevel, String tag, String msg) {
         if (mStringBuffer.length() > mTimeLength) {
             mStringBuffer.delete(mTimeLength, mStringBuffer.length());
         }
-        return mStringBuffer.append(msg).append('\n').toString();
+        return mStringBuffer.append(logLevel.toString()).append(" ").append(tag).append(" ").append(msg).append('\n').toString();
     }
 }
