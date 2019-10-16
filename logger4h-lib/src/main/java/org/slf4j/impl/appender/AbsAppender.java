@@ -14,10 +14,6 @@ import java.util.List;
  */
 public abstract class AbsAppender implements Appender {
 
-    public static final int MAX_LENGTH_OF_SINGLE_MESSAGE = 4063;
-
-    public int maxSingleLength = MAX_LENGTH_OF_SINGLE_MESSAGE;
-
     private List<Interceptor> interceptors = new ArrayList<>();
 
     private LevelInterceptor levelInterceptor = new LevelInterceptor();
@@ -43,10 +39,6 @@ public abstract class AbsAppender implements Appender {
         }
     }
 
-    public void setMaxSingleLength(int maxSingleLength) {
-        this.maxSingleLength = maxSingleLength;
-    }
-
     @Override
     public void append(Level logLevel, String tag, String msg) {
         LogData logData = mLogData.obtain(logLevel, tag, msg);
@@ -58,24 +50,9 @@ public abstract class AbsAppender implements Appender {
             }
         }
         if (print) {
-            appendInner(logData.logLevel, logData.tag, logData.msg);
+            doAppend(logLevel, tag, msg);
         }
         logData.recycle();
-    }
-
-    private void appendInner(Level logLevel, String tag, String msg) {
-        if (msg.length() <= maxSingleLength) {
-            doAppend(logLevel, tag, msg);
-            return;
-        }
-        int msgLength = msg.length();
-        int start = 0;
-        int end = start + maxSingleLength;
-        while (start < msgLength) {
-            doAppend(logLevel, tag, msg.substring(start, end));
-            start = end;
-            end = Math.min(start + maxSingleLength, msgLength);
-        }
     }
 
     protected abstract void doAppend(Level logLevel, String tag, String msg);
