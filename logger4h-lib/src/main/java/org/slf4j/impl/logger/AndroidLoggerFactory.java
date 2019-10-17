@@ -95,27 +95,23 @@ public class AndroidLoggerFactory implements ILoggerFactory {
 
     private List<Appender> getLoggerList(String actualName) {
         List<Appender> loggerList = new ArrayList<>();
-        loggerList.add(new LoggerImpl(
-                new AndroidAppender.Builder()
-                        .setActualName(actualName)
-                        .addInterceptor(mBuilder.interceptors)
-                        .create()
-        ));
+        loggerList.add(new AndroidAppender.Builder()
+                .setActualName(actualName)
+                .addInterceptor(mBuilder.interceptors)
+                .create());
 
         if (!TextUtils.isEmpty(actualName) && actualName.contains(mBuilder.baseTag)) {
             String localPath = mBuilder.logDirPath + File.separator + actualName + File.separator + actualName + "_" + mBuilder.mLastDataFormatTime + mBuilder.suffix;
             String bufferPath = mBuilder.bufferDirPath + File.separator + actualName + File.separator + actualName + ".logCache";
             FileOutTimeUtils.makeDirs(mBuilder.logDirPath + File.separator + actualName);
             FileOutTimeUtils.makeDirs(mBuilder.bufferDirPath + File.separator + actualName);
-            loggerList.add(new LoggerImpl(
-                    new FileAppender.Builder(bufferPath)
-                            .setLogFilePath(localPath)
-                            .setBufferSize(mBuilder.bufferSize)
-                            .setCompress(mBuilder.compress)
-                            .setFormatter(mBuilder.formatter != null ? mBuilder.formatter : new DateFileFormatter())
-                            .addInterceptor(mBuilder.interceptors)
-                            .create()
-            ));
+            loggerList.add(new FileAppender.Builder(bufferPath)
+                    .setLogFilePath(localPath)
+                    .setBufferSize(mBuilder.bufferSize)
+                    .setCompress(mBuilder.compress)
+                    .setFormatter(mBuilder.formatter != null ? mBuilder.formatter : new DateFileFormatter())
+                    .addInterceptor(mBuilder.interceptors)
+                    .create());
         }
         return loggerList;
     }
