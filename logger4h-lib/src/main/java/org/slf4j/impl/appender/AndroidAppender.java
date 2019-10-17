@@ -1,5 +1,6 @@
 package org.slf4j.impl.appender;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.slf4j.event.EventConstants;
@@ -15,14 +16,17 @@ import java.util.List;
  * @author hejing
  */
 public class AndroidAppender extends AbsAppender {
+    private Builder mBuilder;
 
     private AndroidAppender(Builder builder) {
+        this.mBuilder = builder;
         setLevel(builder.level);
         addInterceptor(builder.interceptors);
     }
 
     @Override
     protected void doAppend(Level logLevel, String tag, String msg) {
+        tag = TextUtils.isEmpty(mBuilder.actualName) ? tag : mBuilder.actualName + " " + tag;
         switch (logLevel.toInt()) {
             case EventConstants.DEBUG_INT:
                 Log.d(tag, msg);
@@ -45,6 +49,7 @@ public class AndroidAppender extends AbsAppender {
     public static class Builder {
         private Level level = Level.DEBUG;
         private List<Interceptor> interceptors;
+        private String actualName = "";
 
         public Builder setLevel(Level level) {
             this.level = level;
@@ -53,6 +58,11 @@ public class AndroidAppender extends AbsAppender {
 
         public Builder addInterceptor(Interceptor interceptor) {
             addInterceptor(Collections.singletonList(interceptor));
+            return this;
+        }
+
+        public Builder setActualName(String actualName) {
+            this.actualName = actualName;
             return this;
         }
 

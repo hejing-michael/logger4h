@@ -97,6 +97,7 @@ public class AndroidLoggerFactory implements ILoggerFactory {
         List<Appender> loggerList = new ArrayList<>();
         loggerList.add(new LoggerImpl(
                 new AndroidAppender.Builder()
+                        .setActualName(actualName)
                         .addInterceptor(mBuilder.interceptors)
                         .create()
         ));
