@@ -42,7 +42,7 @@ import java.util.List;
  */
 public class AndroidLogger extends MarkerIgnoringBase implements Appender {
     private static final long serialVersionUID = -1227274521521287937L;
-    private List<LoggerImpl> loggerList;
+    private List<Appender> loggerList;
     private boolean showStackTrace;
     private int currentStack;
 
@@ -50,7 +50,7 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
      * Package access allows only {@link AndroidLoggerFactory} to instantiate
      * SimpleLogger instances.
      */
-    AndroidLogger(final String name, List<LoggerImpl> loggerList,
+    AndroidLogger(final String name, List<Appender> loggerList,
                   boolean showStackTrace, int currentStack) {
         this.name = name;
         this.loggerList = loggerList;
@@ -72,7 +72,7 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
     @Override
     public void trace(final String msg) {
         String tag = getStackTag(showStackTrace);
-        for (LoggerImpl logger : loggerList) {
+        for (Appender logger : loggerList) {
             logger.append(Level.TRACE, tag, msg);
         }
     }
@@ -85,7 +85,7 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
     public void trace(final String format, final Object param1) {
         String tag = getStackTag(showStackTrace);
         String message = format(format, param1, null);
-        for (LoggerImpl logger : loggerList) {
+        for (Appender logger : loggerList) {
             logger.append(Level.TRACE, tag, message);
         }
     }
@@ -97,7 +97,7 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
     public void trace(final String format, final Object param1, final Object param2) {
         String tag = getStackTag(showStackTrace);
         String message = format(format, param1, param2);
-        for (LoggerImpl logger : loggerList) {
+        for (Appender logger : loggerList) {
             logger.append(Level.TRACE, tag, message);
         }
     }
@@ -109,7 +109,7 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
     public void trace(final String format, final Object[] argArray) {
         String tag = getStackTag(showStackTrace);
         String message = format(format, argArray);
-        for (LoggerImpl logger : loggerList) {
+        for (Appender logger : loggerList) {
             logger.append(Level.TRACE, tag, message);
         }
     }
@@ -120,7 +120,7 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
     @Override
     public void trace(final String msg, final Throwable t) {
         String tag = getStackTag(showStackTrace);
-        for (LoggerImpl logger : loggerList) {
+        for (Appender logger : loggerList) {
             logger.append(Level.TRACE, tag, msg + " " + Log.getStackTraceString(t));
         }
     }
@@ -139,7 +139,7 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
     @Override
     public void debug(final String msg) {
         String tag = getStackTag(showStackTrace);
-        for (LoggerImpl logger : loggerList) {
+        for (Appender logger : loggerList) {
             logger.append(Level.DEBUG, tag, msg);
         }
     }
@@ -151,7 +151,7 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
     public void debug(final String format, final Object arg1) {
         String tag = getStackTag(showStackTrace);
         String message = format(format, arg1, null);
-        for (LoggerImpl logger : loggerList) {
+        for (Appender logger : loggerList) {
             logger.append(Level.DEBUG, tag, message);
         }
     }
@@ -163,7 +163,7 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
     public void debug(final String format, final Object param1, final Object param2) {
         String tag = getStackTag(showStackTrace);
         String message = format(format, param1, param2);
-        for (LoggerImpl logger : loggerList) {
+        for (Appender logger : loggerList) {
             logger.append(Level.DEBUG, tag, message);
         }
     }
@@ -175,7 +175,7 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
     public void debug(final String format, final Object[] argArray) {
         String tag = getStackTag(showStackTrace);
         String message = format(format, argArray);
-        for (LoggerImpl logger : loggerList) {
+        for (Appender logger : loggerList) {
             logger.append(Level.DEBUG, tag, message);
         }
     }
@@ -186,7 +186,7 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
     @Override
     public void debug(final String msg, final Throwable t) {
         String tag = getStackTag(showStackTrace);
-        for (LoggerImpl logger : loggerList) {
+        for (Appender logger : loggerList) {
             logger.append(Level.DEBUG, tag, msg + " " + Log.getStackTraceString(t));
         }
     }
@@ -205,7 +205,7 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
     @Override
     public void info(final String msg) {
         String tag = getStackTag(showStackTrace);
-        for (LoggerImpl logger : loggerList) {
+        for (Appender logger : loggerList) {
             logger.append(Level.INFO, tag, msg);
         }
     }
@@ -217,7 +217,7 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
     public void info(final String format, final Object arg) {
         String tag = getStackTag(showStackTrace);
         String message = format(format, arg, null);
-        for (LoggerImpl logger : loggerList) {
+        for (Appender logger : loggerList) {
             logger.append(Level.INFO, tag, message);
         }
     }
@@ -229,7 +229,7 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
     public void info(final String format, final Object arg1, final Object arg2) {
         String tag = getStackTag(showStackTrace);
         String message = format(format, arg1, arg2);
-        for (LoggerImpl logger : loggerList) {
+        for (Appender logger : loggerList) {
             logger.append(Level.INFO, tag, message);
         }
     }
@@ -241,7 +241,7 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
     public void info(final String format, final Object[] argArray) {
         String tag = getStackTag(showStackTrace);
         String message = format(format, argArray);
-        for (LoggerImpl logger : loggerList) {
+        for (Appender logger : loggerList) {
             logger.append(Level.INFO, tag, message);
         }
     }
@@ -252,7 +252,7 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
     @Override
     public void info(final String msg, final Throwable t) {
         String tag = getStackTag(showStackTrace);
-        for (LoggerImpl logger : loggerList) {
+        for (Appender logger : loggerList) {
             logger.append(Level.INFO, tag, msg + " " + Log.getStackTraceString(t));
         }
     }
@@ -271,7 +271,7 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
     @Override
     public void warn(final String msg) {
         String tag = getStackTag(showStackTrace);
-        for (LoggerImpl logger : loggerList) {
+        for (Appender logger : loggerList) {
             logger.append(Level.WARN, tag, msg);
         }
     }
@@ -283,7 +283,7 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
     public void warn(final String format, final Object arg) {
         String tag = getStackTag(showStackTrace);
         String message = format(format, arg, null);
-        for (LoggerImpl logger : loggerList) {
+        for (Appender logger : loggerList) {
             logger.append(Level.WARN, tag, message);
         }
     }
@@ -295,7 +295,7 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
     public void warn(final String format, final Object arg1, final Object arg2) {
         String tag = getStackTag(showStackTrace);
         String message = format(format, arg1, arg2);
-        for (LoggerImpl logger : loggerList) {
+        for (Appender logger : loggerList) {
             logger.append(Level.WARN, tag, message);
         }
     }
@@ -307,7 +307,7 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
     public void warn(final String format, final Object[] argArray) {
         String tag = getStackTag(showStackTrace);
         String message = format(format, argArray);
-        for (LoggerImpl logger : loggerList) {
+        for (Appender logger : loggerList) {
             logger.append(Level.WARN, tag, message);
         }
     }
@@ -318,7 +318,7 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
     @Override
     public void warn(final String msg, final Throwable t) {
         String tag = getStackTag(showStackTrace);
-        for (LoggerImpl logger : loggerList) {
+        for (Appender logger : loggerList) {
             logger.append(Level.WARN, tag, msg + " " + Log.getStackTraceString(t));
         }
     }
@@ -334,7 +334,7 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
     @Override
     public void error(final String msg) {
         String tag = getStackTag(showStackTrace);
-        for (LoggerImpl logger : loggerList) {
+        for (Appender logger : loggerList) {
             logger.append(Level.ERROR, tag, msg);
         }
     }
@@ -346,7 +346,7 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
     public void error(final String format, final Object arg) {
         String tag = getStackTag(showStackTrace);
         String message = format(format, arg, null);
-        for (LoggerImpl logger : loggerList) {
+        for (Appender logger : loggerList) {
             logger.append(Level.ERROR, tag, message);
         }
     }
@@ -358,7 +358,7 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
     public void error(final String format, final Object arg1, final Object arg2) {
         String tag = getStackTag(showStackTrace);
         String message = format(format, arg1, arg2);
-        for (LoggerImpl logger : loggerList) {
+        for (Appender logger : loggerList) {
             logger.append(Level.ERROR, tag, message);
         }
     }
@@ -370,7 +370,7 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
     public void error(final String format, final Object[] argArray) {
         String tag = getStackTag(showStackTrace);
         String message = format(format, argArray);
-        for (LoggerImpl logger : loggerList) {
+        for (Appender logger : loggerList) {
             logger.append(Level.ERROR, tag, message);
         }
     }
@@ -381,7 +381,7 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
     @Override
     public void error(final String msg, final Throwable t) {
         String tag = getStackTag(showStackTrace);
-        for (LoggerImpl logger : loggerList) {
+        for (Appender logger : loggerList) {
             logger.append(Level.ERROR, tag, msg + " " + Log.getStackTraceString(t));
         }
     }

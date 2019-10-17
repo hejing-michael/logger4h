@@ -31,6 +31,7 @@ import android.util.Log;
 
 import org.slf4j.ILoggerFactory;
 import org.slf4j.impl.appender.AndroidAppender;
+import org.slf4j.impl.appender.Appender;
 import org.slf4j.impl.appender.FileAppender;
 import org.slf4j.impl.formatter.DateFileFormatter;
 import org.slf4j.impl.formatter.Formatter;
@@ -92,8 +93,8 @@ public class AndroidLoggerFactory implements ILoggerFactory {
         return slogger;
     }
 
-    private List<LoggerImpl> getLoggerList(String actualName) {
-        List<LoggerImpl> loggerList = new ArrayList<>();
+    private List<Appender> getLoggerList(String actualName) {
+        List<Appender> loggerList = new ArrayList<>();
         loggerList.add(new LoggerImpl(
                 new AndroidAppender.Builder()
                         .addInterceptor(mBuilder.interceptors)
