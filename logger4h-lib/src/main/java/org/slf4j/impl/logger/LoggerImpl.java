@@ -41,6 +41,13 @@ public class LoggerImpl extends MarkerIgnoringBase implements Appender {
     }
 
     /**
+     * @see org.slf4j.Logger#trace(java.lang.String)
+     */
+    public void trace(String tag, String msg) {
+        mAppender.append(Level.TRACE, name + tag, msg);
+    }
+
+    /**
      * @see org.slf4j.Logger#trace(java.lang.String, java.lang.Object)
      */
     @Override
@@ -86,6 +93,13 @@ public class LoggerImpl extends MarkerIgnoringBase implements Appender {
     @Override
     public void debug(final String msg) {
         mAppender.append(Level.DEBUG, name, msg);
+    }
+
+    /**
+     * @see org.slf4j.Logger#debug(java.lang.String)
+     */
+    public void debug(String tag, String msg) {
+        mAppender.append(Level.DEBUG, name + tag, msg);
     }
 
     /**
@@ -137,6 +151,13 @@ public class LoggerImpl extends MarkerIgnoringBase implements Appender {
     }
 
     /**
+     * @see org.slf4j.Logger#info(java.lang.String)
+     */
+    public void info(String tag, final String msg) {
+        mAppender.append(Level.INFO, name + tag, msg);
+    }
+
+    /**
      * @see org.slf4j.Logger#info(java.lang.String, java.lang.Object)
      */
     @Override
@@ -185,6 +206,13 @@ public class LoggerImpl extends MarkerIgnoringBase implements Appender {
     }
 
     /**
+     * @see org.slf4j.Logger#warn(java.lang.String)
+     */
+    public void warn(String tag, final String msg) {
+        mAppender.append(Level.WARN, name + tag, msg);
+    }
+
+    /**
      * @see org.slf4j.Logger#warn(java.lang.String, java.lang.Object)
      */
     @Override
@@ -228,6 +256,13 @@ public class LoggerImpl extends MarkerIgnoringBase implements Appender {
     @Override
     public void error(final String msg) {
         mAppender.append(Level.ERROR, name, msg);
+    }
+
+    /**
+     * @see org.slf4j.Logger#error(java.lang.String)
+     */
+    public void error(String tag, String msg) {
+        mAppender.append(Level.ERROR, name + tag, msg);
     }
 
     /**

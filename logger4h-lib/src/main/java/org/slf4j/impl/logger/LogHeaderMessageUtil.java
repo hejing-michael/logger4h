@@ -6,7 +6,10 @@ public class LogHeaderMessageUtil {
         return stackTrace[1].getLineNumber();
     }
 
-    public static int getLineNumber(StackTraceElement[] stackTrace,int currentStack) {
+    public static int getLineNumber(StackTraceElement[] stackTrace, int currentStack) {
+        if (stackTrace == null || stackTrace[currentStack] == null) {
+            return -1;
+        }
         return stackTrace[currentStack].getLineNumber();
     }
 
@@ -16,7 +19,10 @@ public class LogHeaderMessageUtil {
     }
 
 
-    public static String getMethodName(StackTraceElement[] stackTrace,int currentStack) {
+    public static String getMethodName(StackTraceElement[] stackTrace, int currentStack) {
+        if (stackTrace == null || stackTrace[currentStack] == null) {
+            return "";
+        }
         return stackTrace[currentStack].getMethodName();
     }
 
@@ -25,7 +31,10 @@ public class LogHeaderMessageUtil {
         return stackTrace[1].getFileName();
     }
 
-    public static String getFileName(StackTraceElement[] stackTrace,int currentStack) {
+    public static String getFileName(StackTraceElement[] stackTrace, int currentStack) {
+        if (stackTrace == null || stackTrace[currentStack] == null) {
+            return "";
+        }
         return stackTrace[currentStack].getFileName();
     }
 
@@ -34,7 +43,10 @@ public class LogHeaderMessageUtil {
         return stackTrace[1].getClassName();
     }
 
-    public static String getClassName(StackTraceElement[] stackTrace,int currentStack) {
+    public static String getClassName(StackTraceElement[] stackTrace, int currentStack) {
+        if (stackTrace == null || stackTrace[currentStack] == null) {
+            return "";
+        }
         return stackTrace[currentStack].getClassName();
     }
 }
