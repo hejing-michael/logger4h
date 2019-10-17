@@ -95,7 +95,6 @@ public class AndroidLoggerFactory implements ILoggerFactory {
     private List<LoggerImpl> getLoggerList(String actualName) {
         List<LoggerImpl> loggerList = new ArrayList<>();
         loggerList.add(new LoggerImpl(
-                actualName,
                 new AndroidAppender.Builder()
                         .addInterceptor(mBuilder.interceptors)
                         .create()
@@ -107,7 +106,6 @@ public class AndroidLoggerFactory implements ILoggerFactory {
             FileOutTimeUtils.makeDirs(mBuilder.logDirPath + File.separator + actualName);
             FileOutTimeUtils.makeDirs(mBuilder.bufferDirPath + File.separator + actualName);
             loggerList.add(new LoggerImpl(
-                    actualName,
                     new FileAppender.Builder(bufferPath)
                             .setLogFilePath(localPath)
                             .setBufferSize(mBuilder.bufferSize)

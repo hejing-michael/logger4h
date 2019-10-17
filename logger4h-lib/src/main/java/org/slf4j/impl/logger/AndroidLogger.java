@@ -63,11 +63,6 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
      */
     @Override
     public boolean isTraceEnabled() {
-        for (LoggerImpl logger : loggerList) {
-            if (logger.isTraceEnabled()) {
-                return true;
-            }
-        }
         return false;
     }
 
@@ -135,11 +130,6 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
      */
     @Override
     public boolean isDebugEnabled() {
-        for (LoggerImpl logger : loggerList) {
-            if (logger.isDebugEnabled()) {
-                return true;
-            }
-        }
         return false;
     }
 
@@ -206,11 +196,6 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
      */
     @Override
     public boolean isInfoEnabled() {
-        for (LoggerImpl logger : loggerList) {
-            if (logger.isInfoEnabled()) {
-                return true;
-            }
-        }
         return false;
     }
 
@@ -277,11 +262,6 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
      */
     @Override
     public boolean isWarnEnabled() {
-        for (LoggerImpl logger : loggerList) {
-            if (logger.isWarnEnabled()) {
-                return true;
-            }
-        }
         return false;
     }
 
@@ -345,11 +325,6 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender {
 
     @Override
     public boolean isErrorEnabled() {
-        for (LoggerImpl logger : loggerList) {
-            if (logger.isErrorEnabled()) {
-                return true;
-            }
-        }
         return false;
     }
 
