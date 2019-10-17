@@ -28,7 +28,6 @@ public class DateFileFormatter implements Formatter {
         }
 
         return mStringBuffer
-                .append('\n')
                 .append(mSimpleDateFormat.format(System.currentTimeMillis()))
                 .append(' ')
                 .append(logLevel.toString())
@@ -36,6 +35,7 @@ public class DateFileFormatter implements Formatter {
                 .append(tag)
                 .append(" ")
                 .append(msg)
+                .append('\n')
                 .toString();
     }
 }
