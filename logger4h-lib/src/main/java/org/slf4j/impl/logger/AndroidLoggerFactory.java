@@ -47,6 +47,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * An implementation of {@link ILoggerFactory} which always returns
@@ -63,8 +65,14 @@ public class AndroidLoggerFactory implements ILoggerFactory {
     private static final int TAG_MAX_LENGTH = 23;
     private final Map<String, AndroidLogger> loggerMap = new HashMap<>();
     private final Builder mBuilder;
+    private Executor executor = Executors.newCachedThreadPool();
 
     private AndroidLoggerFactory(Builder builder) {
+        this.mBuilder = builder;
+    }
+
+    private AndroidLoggerFactory(Executor executor, Builder builder) {
+        this.executor = executor;
         this.mBuilder = builder;
     }
 
@@ -97,6 +105,7 @@ public class AndroidLoggerFactory implements ILoggerFactory {
         List<Appender> loggerList = new ArrayList<>();
         loggerList.add(new AndroidAppender.Builder()
                 .setActualName(actualName)
+                .setBufferSize(mBuilder.bufferSize)
                 .addInterceptor(mBuilder.interceptors)
                 .create());
 
@@ -105,13 +114,16 @@ public class AndroidLoggerFactory implements ILoggerFactory {
             String bufferPath = mBuilder.bufferDirPath + File.separator + actualName + File.separator + actualName + ".logCache";
             FileOutTimeUtils.makeDirs(mBuilder.logDirPath + File.separator + actualName);
             FileOutTimeUtils.makeDirs(mBuilder.bufferDirPath + File.separator + actualName);
-            loggerList.add(new FileAppender.Builder(bufferPath)
+
+            FileAppender fileAppender = new FileAppender.Builder(bufferPath)
                     .setLogFilePath(localPath)
                     .setBufferSize(mBuilder.bufferSize)
                     .setCompress(mBuilder.compress)
                     .setFormatter(mBuilder.formatter != null ? mBuilder.formatter : new DateFileFormatter())
                     .addInterceptor(mBuilder.interceptors)
-                    .create());
+                    .create();
+            executor.execute(fileAppender);
+            loggerList.add(fileAppender);
         }
         return loggerList;
     }
@@ -166,10 +178,10 @@ public class AndroidLoggerFactory implements ILoggerFactory {
         private String bufferDirPath;
         private String logDirPath;
         private String mLastDataFormatTime;
-        private int bufferSize;
-        private int maxSaveDay;
+        private int bufferSize = 4096;
+        private int maxSaveDay = 7;
         private String pattern;
-        private String suffix;
+        private String suffix=".log";
         private boolean compress;
         private String baseTag = "";
         private boolean showStackTrace = true;

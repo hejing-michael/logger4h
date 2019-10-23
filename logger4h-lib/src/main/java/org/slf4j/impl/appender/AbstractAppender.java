@@ -3,7 +3,6 @@ package org.slf4j.impl.appender;
 import org.slf4j.event.Level;
 import org.slf4j.impl.interceptor.Interceptor;
 import org.slf4j.impl.interceptor.LevelInterceptor;
-import org.slf4j.impl.interceptor.LogData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,18 +11,15 @@ import java.util.List;
 /**
  * @author hejing
  */
-public abstract class AbsAppender implements Appender {
-
-    public static final int MAX_LENGTH_OF_SINGLE_MESSAGE = 4063;
-
-    public int maxSingleLength = MAX_LENGTH_OF_SINGLE_MESSAGE;
+public abstract class AbstractAppender implements Appender {
+    private final int maxSingleLength;
 
     private List<Interceptor> interceptors = new ArrayList<>();
 
     private LevelInterceptor levelInterceptor = new LevelInterceptor();
-    private LogData mLogData = new LogData();
 
-    public AbsAppender() {
+    AbstractAppender(int maxSingleLength) {
+        this.maxSingleLength = maxSingleLength;
         addInterceptor(levelInterceptor);
     }
 
@@ -31,39 +27,34 @@ public abstract class AbsAppender implements Appender {
         levelInterceptor.setLevel(level);
     }
 
-    public void addInterceptor(List<Interceptor> interceptors) {
+    void addInterceptor(List<Interceptor> interceptors) {
         if (interceptors != null && !interceptors.isEmpty()) {
             this.interceptors.addAll(interceptors);
         }
     }
 
-    public void addInterceptor(Interceptor interceptor) {
+    private void addInterceptor(Interceptor interceptor) {
         if (interceptor != null) {
             interceptors.add(interceptor);
         }
     }
 
-    public void setMaxSingleLength(int maxSingleLength) {
-        this.maxSingleLength = maxSingleLength;
-    }
-
     @Override
     public void append(Level logLevel, String tag, String msg) {
-        LogData logData = mLogData.obtain(logLevel, tag, msg);
+
         boolean print = true;
         for (Interceptor interceptor : interceptors) {
-            if (interceptor.intercept(logData)) {
+            if (interceptor.intercept(logLevel, tag, msg)) {
                 print = false;
                 break;
             }
         }
         if (print) {
-            appendInner(logData.logLevel, logData.tag, logData.msg);
+            appendInner(logLevel, tag, msg);
         }
-        logData.recycle();
     }
 
-    private void appendInner(Level logLevel, String tag, String msg) {
+    protected void appendInner(Level logLevel, String tag, String msg) {
         if (msg.length() <= maxSingleLength) {
             doAppend(logLevel, tag, msg);
             return;
@@ -73,7 +64,7 @@ public abstract class AbsAppender implements Appender {
         int end = start + maxSingleLength;
         while (start < msgLength) {
             doAppend(logLevel, tag, msg.substring(start, end));
-            start = end;
+            start = end + 1;
             end = Math.min(start + maxSingleLength, msgLength);
         }
     }

@@ -15,17 +15,18 @@ import java.util.List;
 /**
  * @author hejing
  */
-public class AndroidAppender extends AbsAppender {
+public class AndroidAppender extends AbstractAppender {
     private Builder mBuilder;
 
     private AndroidAppender(Builder builder) {
+        super(builder.bufferSize);
         this.mBuilder = builder;
         setLevel(builder.level);
         addInterceptor(builder.interceptors);
     }
 
     @Override
-    protected void doAppend(Level logLevel, String tag, String msg) {
+    protected void appendInner(Level logLevel, String tag, String msg) {
         tag = TextUtils.isEmpty(mBuilder.actualName) ? tag : mBuilder.actualName + " " + tag;
         switch (logLevel.toInt()) {
             case EventConstants.DEBUG_INT:
@@ -46,13 +47,23 @@ public class AndroidAppender extends AbsAppender {
         }
     }
 
+    @Override
+    protected void doAppend(Level logLevel, String tag, String msg) {
+    }
+
     public static class Builder {
         private Level level = Level.DEBUG;
         private List<Interceptor> interceptors;
         private String actualName = "";
+        private int bufferSize;
 
         public Builder setLevel(Level level) {
             this.level = level;
+            return this;
+        }
+
+        public Builder setBufferSize(int bufferSize) {
+            this.bufferSize = bufferSize;
             return this;
         }
 
