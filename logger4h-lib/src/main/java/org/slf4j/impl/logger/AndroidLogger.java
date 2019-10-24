@@ -34,7 +34,6 @@ import org.slf4j.helpers.MarkerIgnoringBase;
 import org.slf4j.helpers.MessageFormatter;
 import org.slf4j.impl.appender.Appender;
 import org.slf4j.impl.interceptor.Message;
-import org.slf4j.impl.utils.StringUtil;
 
 import java.util.List;
 import java.util.concurrent.BlockingDeque;
@@ -394,23 +393,28 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender, Runna
                 break;
             }
             Log.i("AndroidLogger", message.getMsg());
-            splitMessage(message.getLogLevel(), message.getTag(), message.getMsg());
+            append(message.getLogLevel(), message.getTag(), message.getMsg());
         }
     }
 
     private void splitMessage(Level logLevel, String tag, String msg) {
-        if (msg.length() <= maxSingleLength) {
-            append(logLevel, tag, "page:1" + msg);
-            return;
-        }
+        String tempRemaining = msg;
+        while (!TextUtils.isEmpty(tempRemaining)) {
+            if (tempRemaining.length() <= maxSingleLength) {
+                append(logLevel, tag, tempRemaining);
+                break;
+            }
 
-        for (String childStr : StringUtil.getStrList(msg, maxSingleLength)) {
-            append(logLevel, tag, childStr);
+            String current = tempRemaining.substring(0, maxSingleLength);
+            tempRemaining = tempRemaining.substring(maxSingleLength);
+            append(logLevel, tag, current);
         }
     }
 
+
     @Override
     public void append(Level logLevel, String tag, String msg) {
+        msg = "size:" + msg.length() + " " + msg;
         for (Appender appender : loggerList) {
             appender.append(logLevel, tag, msg);
         }
