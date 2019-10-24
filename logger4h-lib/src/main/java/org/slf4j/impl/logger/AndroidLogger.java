@@ -393,7 +393,7 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender, Runna
                 break;
             }
             Log.i("AndroidLogger", message.getMsg());
-            append(message.getLogLevel(), message.getTag(), message.getMsg());
+            splitMessage(message.getLogLevel(), message.getTag(), message.getMsg());
         }
     }
 
@@ -414,7 +414,6 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender, Runna
 
     @Override
     public void append(Level logLevel, String tag, String msg) {
-        msg = "size:" + msg.length() + " " + msg;
         for (Appender appender : loggerList) {
             appender.append(logLevel, tag, msg);
         }
