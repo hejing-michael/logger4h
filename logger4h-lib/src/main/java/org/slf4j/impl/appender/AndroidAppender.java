@@ -19,14 +19,13 @@ public class AndroidAppender extends AbstractAppender {
     private Builder mBuilder;
 
     private AndroidAppender(Builder builder) {
-        super(builder.bufferSize);
         this.mBuilder = builder;
         setLevel(builder.level);
         addInterceptor(builder.interceptors);
     }
 
     @Override
-    protected void appendInner(Level logLevel, String tag, String msg) {
+    protected void doAppend(Level logLevel, String tag, String msg) {
         tag = TextUtils.isEmpty(mBuilder.actualName) ? tag : mBuilder.actualName + " " + tag;
         switch (logLevel.toInt()) {
             case EventConstants.DEBUG_INT:
@@ -45,10 +44,6 @@ public class AndroidAppender extends AbstractAppender {
                 Log.v(tag, msg);
                 break;
         }
-    }
-
-    @Override
-    protected void doAppend(Level logLevel, String tag, String msg) {
     }
 
     public static class Builder {

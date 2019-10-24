@@ -12,14 +12,11 @@ import java.util.List;
  * @author hejing
  */
 public abstract class AbstractAppender implements Appender {
-    private final int maxSingleLength;
-
-    private List<Interceptor> interceptors = new ArrayList<>();
+    private final List<Interceptor> interceptors = new ArrayList<>();
 
     private LevelInterceptor levelInterceptor = new LevelInterceptor();
 
-    AbstractAppender(int maxSingleLength) {
-        this.maxSingleLength = maxSingleLength;
+    AbstractAppender() {
         addInterceptor(levelInterceptor);
     }
 
@@ -41,7 +38,6 @@ public abstract class AbstractAppender implements Appender {
 
     @Override
     public void append(Level logLevel, String tag, String msg) {
-
         boolean print = true;
         for (Interceptor interceptor : interceptors) {
             if (interceptor.intercept(logLevel, tag, msg)) {
@@ -50,22 +46,7 @@ public abstract class AbstractAppender implements Appender {
             }
         }
         if (print) {
-            appendInner(logLevel, tag, msg);
-        }
-    }
-
-    protected void appendInner(Level logLevel, String tag, String msg) {
-        if (msg.length() <= maxSingleLength) {
             doAppend(logLevel, tag, msg);
-            return;
-        }
-        int msgLength = msg.length();
-        int start = 0;
-        int end = start + maxSingleLength;
-        while (start < msgLength) {
-            doAppend(logLevel, tag, msg.substring(start, end));
-            start = end + 1;
-            end = Math.min(start + maxSingleLength, msgLength);
         }
     }
 

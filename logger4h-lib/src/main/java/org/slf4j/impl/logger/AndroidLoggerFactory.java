@@ -94,7 +94,8 @@ public class AndroidLoggerFactory implements ILoggerFactory {
                             "LoggerImpl name '" + name + "' exceeds maximum length of " + TAG_MAX_LENGTH +
                                     " characters, using '" + actualName + "' instead.");
                 }
-                slogger = new AndroidLogger(actualName, getLoggerList(actualName), mBuilder.showStackTrace, mBuilder.currentStack);
+                slogger = new AndroidLogger(actualName, mBuilder.bufferSize, getLoggerList(actualName), mBuilder.showStackTrace, mBuilder.currentStack);
+                executor.execute(slogger);
                 loggerMap.put(actualName, slogger);
             }
         }
@@ -122,7 +123,6 @@ public class AndroidLoggerFactory implements ILoggerFactory {
                     .setFormatter(mBuilder.formatter != null ? mBuilder.formatter : new DateFileFormatter())
                     .addInterceptor(mBuilder.interceptors)
                     .create();
-            executor.execute(fileAppender);
             loggerList.add(fileAppender);
         }
         return loggerList;
@@ -181,7 +181,7 @@ public class AndroidLoggerFactory implements ILoggerFactory {
         private int bufferSize = 4096;
         private int maxSaveDay = 7;
         private String pattern;
-        private String suffix=".log";
+        private String suffix = ".log";
         private boolean compress;
         private String baseTag = "";
         private boolean showStackTrace = true;
