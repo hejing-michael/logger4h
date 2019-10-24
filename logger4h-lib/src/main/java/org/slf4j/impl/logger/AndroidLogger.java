@@ -34,6 +34,7 @@ import org.slf4j.helpers.MarkerIgnoringBase;
 import org.slf4j.helpers.MessageFormatter;
 import org.slf4j.impl.appender.Appender;
 import org.slf4j.impl.interceptor.Message;
+import org.slf4j.impl.utils.StringUtil;
 
 import java.util.List;
 import java.util.concurrent.BlockingDeque;
@@ -399,7 +400,7 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender, Runna
 
     private void splitMessage(Level logLevel, String tag, String msg) {
         String tempRemaining = msg;
-        while (!TextUtils.isEmpty(tempRemaining)) {
+        while (!StringUtil.isEmpty(tempRemaining)) {
             if (tempRemaining.length() <= maxSingleLength) {
                 append(logLevel, tag, tempRemaining);
                 break;
