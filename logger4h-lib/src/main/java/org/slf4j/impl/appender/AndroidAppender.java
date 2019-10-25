@@ -50,15 +50,9 @@ public class AndroidAppender extends AbstractAppender {
         private Level level = Level.DEBUG;
         private List<Interceptor> interceptors;
         private String actualName = "";
-        private int bufferSize;
 
         public Builder setLevel(Level level) {
             this.level = level;
-            return this;
-        }
-
-        public Builder setBufferSize(int bufferSize) {
-            this.bufferSize = bufferSize;
             return this;
         }
 

@@ -94,7 +94,8 @@ public class AndroidLoggerFactory implements ILoggerFactory {
                             "LoggerImpl name '" + name + "' exceeds maximum length of " + TAG_MAX_LENGTH +
                                     " characters, using '" + actualName + "' instead.");
                 }
-                slogger = new AndroidLogger(actualName, mBuilder.bufferSize, getLoggerList(actualName), mBuilder.showStackTrace, mBuilder.currentStack);
+                int messageLength = mBuilder.bufferSize - mBuilder.maxHeaderLength;
+                slogger = new AndroidLogger(actualName, messageLength, getLoggerList(actualName), mBuilder.showStackTrace, mBuilder.currentStack);
                 executor.execute(slogger);
                 loggerMap.put(actualName, slogger);
             }
@@ -106,7 +107,6 @@ public class AndroidLoggerFactory implements ILoggerFactory {
         List<Appender> loggerList = new ArrayList<>();
         loggerList.add(new AndroidAppender.Builder()
                 .setActualName(actualName)
-                .setBufferSize(mBuilder.bufferSize)
                 .addInterceptor(mBuilder.interceptors)
                 .create());
 
@@ -179,6 +179,7 @@ public class AndroidLoggerFactory implements ILoggerFactory {
         private String logDirPath;
         private String mLastDataFormatTime;
         private int bufferSize = 4096;
+        private int maxHeaderLength = 100;
         private int maxSaveDay = 7;
         private String pattern;
         private String suffix = ".log";
@@ -188,6 +189,11 @@ public class AndroidLoggerFactory implements ILoggerFactory {
         private int currentStack = 4;
         private Formatter formatter;
         private List<Interceptor> interceptors = new ArrayList<>();
+
+        public Builder setMaxHeaderLength(int maxHeaderLength) {
+            this.maxHeaderLength = maxHeaderLength;
+            return this;
+        }
 
         public Builder setFormatter(Formatter formatter) {
             this.formatter = formatter;
@@ -276,6 +282,10 @@ public class AndroidLoggerFactory implements ILoggerFactory {
 
             if (suffix == null) {
                 throw new IllegalArgumentException("suffix cannot be null");
+            }
+
+            if (maxHeaderLength > bufferSize) {
+                throw new IllegalArgumentException("maxHeaderLength greater or equal to bufferSize");
             }
 
             return new AndroidLoggerFactory(this);

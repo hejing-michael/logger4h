@@ -66,6 +66,22 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender, Runna
         this.mBlockingQueue = new LinkedBlockingDeque<>();
     }
 
+    public static void main(String[] args) {
+        String path = "C:\\Users\\hejin\\Desktop\\test.txt";
+        String tempRemaining = StringUtil.readToString(path);
+        int maxSingleLength = 1024 * 2;
+        while (!StringUtil.isEmpty(tempRemaining)) {
+            if (tempRemaining.length() <= maxSingleLength) {
+                System.out.println(tempRemaining);
+                break;
+            }
+
+            String current = tempRemaining.substring(0, maxSingleLength);
+            tempRemaining = tempRemaining.substring(maxSingleLength);
+            System.out.println(current);
+        }
+    }
+
     /**
      * @see org.slf4j.Logger#isTraceEnabled()
      */
@@ -400,18 +416,18 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender, Runna
 
     private void splitMessage(Level logLevel, String tag, String msg) {
         String tempRemaining = msg;
+        int maxMessageLength = maxSingleLength;
         while (!StringUtil.isEmpty(tempRemaining)) {
-            if (tempRemaining.length() <= maxSingleLength) {
+            if (tempRemaining.length() <= maxMessageLength) {
                 append(logLevel, tag, tempRemaining);
                 break;
             }
 
-            String current = tempRemaining.substring(0, maxSingleLength);
-            tempRemaining = tempRemaining.substring(maxSingleLength);
+            String current = tempRemaining.substring(0, maxMessageLength);
+            tempRemaining = tempRemaining.substring(maxMessageLength);
             append(logLevel, tag, current);
         }
     }
-
 
     @Override
     public void append(Level logLevel, String tag, String msg) {
