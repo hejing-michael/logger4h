@@ -179,7 +179,7 @@ public class AndroidLoggerFactory implements ILoggerFactory {
         private String logDirPath;
         private String mLastDataFormatTime;
         private int bufferSize = 4096;
-        private int maxHeaderLength = 100;
+        private int maxHeaderLength = 150;
         private int maxSaveDay = 7;
         private String pattern;
         private String suffix = ".log";

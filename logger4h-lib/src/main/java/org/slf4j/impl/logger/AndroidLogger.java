@@ -66,6 +66,24 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender, Runna
         this.mBlockingQueue = new LinkedBlockingDeque<>();
     }
 
+    public static void main(String[] args) {
+        String path = "C:\\Users\\hejin\\Desktop\\test.txt";
+        String msg = StringUtil.readToString(path);
+        int maxSingleLength = 1024 * 2;
+        if (msg.length() <= maxSingleLength) {
+            System.out.println(msg);
+            return;
+        }
+        int msgLength = msg.length();
+        int start = 0;
+        int end = start + maxSingleLength;
+        while (start < msgLength) {
+            System.out.println(msg.substring(start, end));
+            start = end;
+            end = Math.min(start + maxSingleLength, msgLength);
+        }
+    }
+
     /**
      * @see org.slf4j.Logger#isTraceEnabled()
      */
@@ -394,13 +412,12 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender, Runna
                 break;
             }
 
-            splitMessage(message.getLogLevel(), message.getTag(), message.getMsg());
+            appendInner(message.getLogLevel(), message.getTag(), message.getMsg(), maxSingleLength);
         }
     }
 
-    private void splitMessage(Level logLevel, String tag, String msg) {
+    private void splitMessage(Level logLevel, String tag, String msg, int maxMessageLength) {
         String tempRemaining = msg;
-        int maxMessageLength = maxSingleLength;
         while (!StringUtil.isEmpty(tempRemaining)) {
             if (tempRemaining.length() <= maxMessageLength) {
                 append(logLevel, tag, tempRemaining);
@@ -410,6 +427,21 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender, Runna
             String current = tempRemaining.substring(0, maxMessageLength);
             tempRemaining = tempRemaining.substring(maxMessageLength);
             append(logLevel, tag, current);
+        }
+    }
+
+    private void appendInner(Level logLevel, String tag, String msg, int maxSingleLength) {
+        if (msg.length() <= maxSingleLength) {
+            append(logLevel, tag, msg);
+            return;
+        }
+        int msgLength = msg.length();
+        int start = 0;
+        int end = start + maxSingleLength;
+        while (start < msgLength) {
+            append(logLevel, tag, msg.substring(start, end));
+            start = end;
+            end = Math.min(start + maxSingleLength, msgLength);
         }
     }
 
