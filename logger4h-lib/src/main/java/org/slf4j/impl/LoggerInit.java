@@ -24,7 +24,6 @@ public class LoggerInit {
                 .setPattern("yyyy-MM-dd_HH")
                 .setSuffix(".log")
                 .setCompress(false)
-                .clearAllOutOfDateFiles()
                 .create());
     }
 
@@ -39,6 +38,14 @@ public class LoggerInit {
 
         mAndroidLoggerFactory = androidLoggerFactory;
         StaticLoggerBinder.getSingleton().setLoggerFactory(androidLoggerFactory);
+    }
+
+
+    public static void clearOverdueLog() {
+        if (mAndroidLoggerFactory != null) {
+            mAndroidLoggerFactory.clearOverdueLog();
+            mAndroidLoggerFactory = null;
+        }
     }
 
 

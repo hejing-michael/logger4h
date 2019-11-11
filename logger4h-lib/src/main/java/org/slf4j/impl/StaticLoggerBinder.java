@@ -3,6 +3,8 @@ package org.slf4j.impl;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.NOPLoggerFactory;
+import org.slf4j.impl.appender.AndroidAppender;
+import org.slf4j.impl.logger.AndroidLogcatFactory;
 import org.slf4j.impl.logger.AndroidLoggerFactory;
 import org.slf4j.spi.LoggerFactoryBinder;
 
@@ -34,7 +36,7 @@ public class StaticLoggerBinder implements LoggerFactoryBinder {
     private ILoggerFactory loggerFactory;
 
     private StaticLoggerBinder() {
-        loggerFactory = new NOPLoggerFactory();
+        loggerFactory = new AndroidLogcatFactory();
     }
 
     /**

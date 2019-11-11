@@ -66,24 +66,6 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender, Runna
         this.mBlockingQueue = new LinkedBlockingDeque<>();
     }
 
-    public static void main(String[] args) {
-        String path = "C:\\Users\\hejin\\Desktop\\test.txt";
-        String msg = StringUtil.readToString(path);
-        int maxSingleLength = 1024 * 2;
-        if (msg.length() <= maxSingleLength) {
-            System.out.println(msg);
-            return;
-        }
-        int msgLength = msg.length();
-        int start = 0;
-        int end = start + maxSingleLength;
-        while (start < msgLength) {
-            System.out.println(msg.substring(start, end));
-            start = end;
-            end = Math.min(start + maxSingleLength, msgLength);
-        }
-    }
-
     /**
      * @see org.slf4j.Logger#isTraceEnabled()
      */

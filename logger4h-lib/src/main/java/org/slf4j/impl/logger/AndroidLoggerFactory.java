@@ -62,7 +62,6 @@ public class AndroidLoggerFactory implements ILoggerFactory {
     /**
      * tag names cannot be longer on Android platform
      */
-    private static final int TAG_MAX_LENGTH = 23;
     private final Map<String, AndroidLogger> loggerMap = new HashMap<>();
     private final Builder mBuilder;
     private Executor executor = Executors.newCachedThreadPool();
@@ -82,7 +81,7 @@ public class AndroidLoggerFactory implements ILoggerFactory {
     @Override
     public org.slf4j.Logger getLogger(final String name) {
         // fix for bug #173
-        final String actualName = forceValidName(name);
+        final String actualName = forceValidName(name, mBuilder.maxFileNameLength);
 
         AndroidLogger slogger;
         // protect against concurrent access of the loggerMap
@@ -91,7 +90,7 @@ public class AndroidLoggerFactory implements ILoggerFactory {
             if (slogger == null) {
                 if (!actualName.equals(name)) {
                     Log.i(AndroidLoggerFactory.class.getSimpleName(),
-                            "LoggerImpl name '" + name + "' exceeds maximum length of " + TAG_MAX_LENGTH +
+                            "LoggerImpl name '" + name + "' exceeds maximum length of " + mBuilder.maxFileNameLength +
                                     " characters, using '" + actualName + "' instead.");
                 }
                 int messageLength = mBuilder.bufferSize - mBuilder.maxHeaderLength;
@@ -129,10 +128,10 @@ public class AndroidLoggerFactory implements ILoggerFactory {
     }
 
     /**
-     * Trim name in case it exceeds maximum length of {@value #TAG_MAX_LENGTH} characters.
+     * Trim name in case it exceeds maximum length of mBuilder.maxFileNameLength characters.
      */
-    private String forceValidName(String name) {
-        if (name != null && name.length() > TAG_MAX_LENGTH) {
+    public static String forceValidName(String name, int maxFileNameLength) {
+        if (name != null && name.length() > maxFileNameLength) {
             final StringTokenizer st = new StringTokenizer(name, ".");
             // note that empty tokens are skipped, i.e., "aa..bb" has tokens "aa", "bb"
             if (st.hasMoreTokens()) {
@@ -159,8 +158,8 @@ public class AndroidLoggerFactory implements ILoggerFactory {
 
             // Either we had no useful dot location at all or name still too long.
             // Take leading part and append '*' to indicate that it was truncated
-            if (name.length() > TAG_MAX_LENGTH) {
-                name = name.substring(0, TAG_MAX_LENGTH - 1) + '*';
+            if (name.length() > maxFileNameLength) {
+                name = name.substring(0, maxFileNameLength - 1) + '*';
             }
         }
         return name;
@@ -174,12 +173,19 @@ public class AndroidLoggerFactory implements ILoggerFactory {
         }
     }
 
+    public void clearOverdueLog() {
+        if (mBuilder != null) {
+            mBuilder.clearOverdueLog();
+        }
+    }
+
     public static class Builder {
         private String bufferDirPath;
         private String logDirPath;
         private String mLastDataFormatTime;
         private int bufferSize = 4096;
         private int maxHeaderLength = 150;
+        private int maxFileNameLength = 50;
         private int maxSaveDay = 7;
         private String pattern;
         private String suffix = ".log";
@@ -189,6 +195,11 @@ public class AndroidLoggerFactory implements ILoggerFactory {
         private int currentStack = 4;
         private Formatter formatter;
         private List<Interceptor> interceptors = new ArrayList<>();
+
+        public Builder setMaxFileNameLength(int maxFileNameLength) {
+            this.maxFileNameLength = maxFileNameLength;
+            return this;
+        }
 
         public Builder setMaxHeaderLength(int maxHeaderLength) {
             this.maxHeaderLength = maxHeaderLength;
@@ -265,11 +276,45 @@ public class AndroidLoggerFactory implements ILoggerFactory {
             return this;
         }
 
-        public Builder clearAllOutOfDateFiles() {
+        public Builder clearOverdueLog() {
             FileOutTimeUtils.deleteAllOutOfDateAndNonDesignatedFiles(TAG, logDirPath, pattern, System.currentTimeMillis(), maxSaveDay, suffix);
             return this;
         }
 
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("{");
+            sb.append("\"bufferDirPath\":\"")
+                    .append(bufferDirPath).append('\"');
+            sb.append(",\"logDirPath\":\"")
+                    .append(logDirPath).append('\"');
+            sb.append(",\"mLastDataFormatTime\":\"")
+                    .append(mLastDataFormatTime).append('\"');
+            sb.append(",\"bufferSize\":")
+                    .append(bufferSize);
+            sb.append(",\"maxHeaderLength\":")
+                    .append(maxHeaderLength);
+            sb.append(",\"maxSaveDay\":")
+                    .append(maxSaveDay);
+            sb.append(",\"pattern\":\"")
+                    .append(pattern).append('\"');
+            sb.append(",\"suffix\":\"")
+                    .append(suffix).append('\"');
+            sb.append(",\"compress\":")
+                    .append(compress);
+            sb.append(",\"baseTag\":\"")
+                    .append(baseTag).append('\"');
+            sb.append(",\"showStackTrace\":")
+                    .append(showStackTrace);
+            sb.append(",\"currentStack\":")
+                    .append(currentStack);
+            sb.append(",\"formatter\":")
+                    .append(formatter);
+            sb.append(",\"interceptors\":")
+                    .append(interceptors);
+            sb.append('}');
+            return sb.toString();
+        }
 
         public AndroidLoggerFactory create() {
             if (logDirPath == null) {
@@ -287,7 +332,7 @@ public class AndroidLoggerFactory implements ILoggerFactory {
             if (maxHeaderLength > bufferSize) {
                 throw new IllegalArgumentException("maxHeaderLength greater or equal to bufferSize");
             }
-
+            Log.w("AndroidLoggerFactory", "builder:" + toString());
             return new AndroidLoggerFactory(this);
         }
     }
