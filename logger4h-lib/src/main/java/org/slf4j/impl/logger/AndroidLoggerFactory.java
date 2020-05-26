@@ -103,13 +103,14 @@ public class AndroidLoggerFactory implements ILoggerFactory {
     }
 
     private List<Appender> getLoggerList(String actualName) {
+        String[] keyStringArray = actualName.split("_");
         List<Appender> loggerList = new ArrayList<>();
         loggerList.add(new AndroidAppender.Builder()
                 .setActualName(actualName)
                 .addInterceptor(mBuilder.interceptors)
                 .create());
 
-        if (!TextUtils.isEmpty(actualName) && actualName.contains(mBuilder.baseTag)) {
+        if (!TextUtils.isEmpty(actualName) && keyStringArray.length > 0 && mBuilder.baseTagList.contains(keyStringArray[0])) {
             String localPath = mBuilder.logDirPath + File.separator + actualName + File.separator + actualName + "_" + mBuilder.mLastDataFormatTime + mBuilder.suffix;
             String bufferPath = mBuilder.bufferDirPath + File.separator + actualName + File.separator + actualName + ".logCache";
             FileOutTimeUtils.makeDirs(mBuilder.logDirPath + File.separator + actualName);
@@ -190,7 +191,7 @@ public class AndroidLoggerFactory implements ILoggerFactory {
         private String pattern;
         private String suffix = ".log";
         private boolean compress;
-        private String baseTag = "";
+        private List<String> baseTagList = new ArrayList<>();
         private boolean showStackTrace = true;
         private int currentStack = 4;
         private Formatter formatter;
@@ -235,8 +236,13 @@ public class AndroidLoggerFactory implements ILoggerFactory {
             return this;
         }
 
-        public Builder setBaseTag(String baseTag) {
-            this.baseTag = baseTag;
+        public Builder addBaseTag(String baseTag) {
+            this.baseTagList.add(baseTag);
+            return this;
+        }
+
+        public Builder addBaseTag(List<String> baseTagList) {
+            this.baseTagList.addAll(baseTagList);
             return this;
         }
 
@@ -302,8 +308,8 @@ public class AndroidLoggerFactory implements ILoggerFactory {
                     .append(suffix).append('\"');
             sb.append(",\"compress\":")
                     .append(compress);
-            sb.append(",\"baseTag\":\"")
-                    .append(baseTag).append('\"');
+            sb.append(",\"baseTagList\":\"")
+                    .append(baseTagList).append('\"');
             sb.append(",\"showStackTrace\":")
                     .append(showStackTrace);
             sb.append(",\"currentStack\":")
@@ -330,7 +336,7 @@ public class AndroidLoggerFactory implements ILoggerFactory {
             }
 
             if (maxHeaderLength > bufferSize) {
-                throw new IllegalArgumentException("maxHeaderLength greater or equal to bufferSize");
+                throw new IllegalArgumentException("maxHeaderLength greater or  equalto bufferSize");
             }
             Log.w("AndroidLoggerFactory", "builder:" + toString());
             return new AndroidLoggerFactory(this);
