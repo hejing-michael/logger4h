@@ -394,6 +394,10 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender, Runna
                 break;
             }
 
+            if (StringUtil.isEmpty(message.getMsg())) {
+                continue;
+            }
+
             appendInner(message.getLogLevel(), message.getTag(), message.getMsg(), maxSingleLength);
         }
     }

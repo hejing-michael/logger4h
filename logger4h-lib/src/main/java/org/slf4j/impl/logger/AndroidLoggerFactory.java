@@ -41,6 +41,7 @@ import org.slf4j.impl.utils.FileOutTimeUtils;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -238,6 +239,11 @@ public class AndroidLoggerFactory implements ILoggerFactory {
 
         public Builder addBaseTag(String baseTag) {
             this.baseTagList.add(baseTag);
+            return this;
+        }
+
+        public Builder addBaseTag(String ...baseTag) {
+            this.baseTagList.addAll(Arrays.asList(baseTag));
             return this;
         }
 

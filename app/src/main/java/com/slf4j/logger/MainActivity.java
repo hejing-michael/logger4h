@@ -22,17 +22,17 @@ import java.util.Locale;
 public class MainActivity extends Activity {
     private static final String TAG = "MainActivity";
     private static List<Logger> loggerList = Arrays.asList(
-            LoggerFactory.getLogger("aa"),
-            LoggerFactory.getLogger("bb"),
-            LoggerFactory.getLogger("cc"),
-            LoggerFactory.getLogger("dd"),
-            LoggerFactory.getLogger("ee"),
-            LoggerFactory.getLogger("ff"),
-            LoggerFactory.getLogger("gg"),
-            LoggerFactory.getLogger("hh"),
-            LoggerFactory.getLogger("ii"),
-            LoggerFactory.getLogger("jj"),
-            LoggerFactory.getLogger("kk")
+            LoggerFactory.getLogger("Main_aa"),
+            LoggerFactory.getLogger("Main_bb"),
+            LoggerFactory.getLogger("Main_cc"),
+            LoggerFactory.getLogger("Main_dd"),
+            LoggerFactory.getLogger("Main_ee"),
+            LoggerFactory.getLogger("Main_ff"),
+            LoggerFactory.getLogger("Main_gg"),
+            LoggerFactory.getLogger("Main_hh"),
+            LoggerFactory.getLogger("Main_ii"),
+            LoggerFactory.getLogger("Main_jj"),
+            LoggerFactory.getLogger("Main_kk")
     );
     EditText etContent;
     EditText etThread;

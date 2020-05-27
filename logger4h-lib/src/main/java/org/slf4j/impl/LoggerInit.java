@@ -21,6 +21,7 @@ public class LoggerInit {
                 .setBufferSize(1024 * 2)
                 .setBufferDirPath(logDir)
                 .setLogDirPath(logDir)
+                .addBaseTag("Main")
                 .setPattern("yyyy-MM-dd_HH")
                 .setSuffix(".log")
                 .setCompress(false)
