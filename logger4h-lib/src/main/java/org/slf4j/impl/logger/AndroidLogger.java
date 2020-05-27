@@ -394,7 +394,7 @@ public class AndroidLogger extends MarkerIgnoringBase implements Appender, Runna
                 break;
             }
 
-            if (StringUtil.isEmpty(message.getMsg())) {
+            if (StringUtil.isEmpty(message.getTag()) || StringUtil.isEmpty(message.getMsg())) {
                 continue;
             }
 
