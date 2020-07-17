@@ -4,11 +4,13 @@ buildscript {
     ext.kotlin_version = '1.3.72'
 
     repositories {
-        maven { url 'http://nexus.eastedu.org/repository/maven-public/' }
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         maven { url 'https://jitpack.io' }
         jcenter()
         google()
+
+        // 本地nexus 库需要放在最下面，否则会出现其它第三方库下下载超时的问题
+        maven { url 'http://nexus.eastedu.org/repository/maven-public/' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.1'
@@ -21,11 +23,13 @@ buildscript {
 
 allprojects {
     repositories {
-        maven { url 'http://nexus.eastedu.org/repository/maven-public/' }
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         maven { url 'https://jitpack.io' }
         jcenter()
         google()
+
+        // 本地nexus 库需要放在最下面，否则会出现其它第三方库下下载超时的问题
+        maven { url 'http://nexus.eastedu.org/repository/maven-public/' }
     }
 }
 
